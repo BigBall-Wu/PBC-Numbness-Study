@@ -46,6 +46,21 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg-1);line-he
 
 .wrap{max-width:900px;margin:0 auto;padding:0 20px}
 
+/* 桌面端双栏：左筛选栏固定 + 右文献流 */
+@media(min-width:1024px){
+  .wrap{max-width:1280px;padding:0 40px}
+  .page-head{padding:52px 0 28px}
+  .page-head h1{font-size:34px}
+  .lib-layout{display:grid;grid-template-columns:280px 1fr;gap:32px;align-items:start;padding-bottom:40px}
+  /* 左侧筛选栏：sticky 固定 */
+  .lib-sidebar{position:sticky;top:84px;max-height:calc(100vh - 100px);overflow-y:auto;padding-right:4px}
+  .lib-sidebar .search-box{position:static;top:auto;margin-bottom:16px}
+  .lib-sidebar .filter-bar{flex-direction:column;gap:6px;padding:0 0 12px}
+  .lib-sidebar .filter-chip{text-align:left;width:100%}
+  /* 右侧文献流 */
+  .lib-main{min-width:0}
+}
+
 /* 页头 */
 .page-head{padding:40px 0 24px}
 .page-head h1{font-family:var(--font-headline);font-weight:700;font-size:30px;letter-spacing:-.01em;margin-bottom:8px}
@@ -150,6 +165,11 @@ footer a{color:var(--teaching-accent-deep);text-decoration:none}
     <p>50 篇最相关文献，覆盖 PBC 麻木、复发、Meckel 腔、预测模型、fMRI、GBTM、中枢机制等主题。可搜索、可按类别筛选。</p>
   </div>
 
+  <!-- ===== 桌面端双栏布局：左筛选 / 右文献流 ===== -->
+  <div class="lib-layout">
+
+  <!-- 左侧：搜索 + 筛选 -->
+  <aside class="lib-sidebar">
   <!-- 搜索 -->
   <div class="search-box">
     <div class="search-wrap">
@@ -170,7 +190,10 @@ footer a{color:var(--teaching-accent-deep);text-decoration:none}
     <button class="filter-chip" data-cat="G">G·GBTM方法</button>
     <button class="filter-chip" data-cat="H">H·量表方法</button>
   </div>
+  </aside>
 
+  <!-- 右侧：结果 + 文献流 -->
+  <div class="lib-main">
   <div class="result-count" id="resultCount">显示全部 50 篇</div>
 
   <div class="lib-list" id="libList"></div>
@@ -179,6 +202,10 @@ footer a{color:var(--teaching-accent-deep);text-decoration:none}
     <span class="emoji">🔍</span>
     <p>没有匹配的文献，换个关键词试试</p>
   </div>
+  </div>
+
+  </div>
+  <!-- ===== 双栏布局结束 ===== -->
 
   <footer>
     <p>文献检索日期：2026-06-24 · 来源：PubMed / Web of Science / ScienceDirect 等<br>
