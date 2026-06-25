@@ -39,18 +39,23 @@
 | **`附件-CRF病例报告表模板（V1.0 可打印）.docx`** | 附件 | V1.0 / 2026-06-24 | 可打印的病例报告表，含 A–E 模块、19 个表格 |
 | **`附件-统计分析计划SAP（V1.0）.docx`** | 附件 | V1.0 / 2026-06-24 | 统计分析计划，含背景、目标、版本控制、签署确认（117 段，13 表） |
 | **`学习手册-PBC术后麻木恢复机制研究.md`** | 学习材料 | 2026-06-24 | Markdown 源：一天读懂方案的学习手册（含 54 术语 + 12 自测题） |
-| **`学习手册.html`** | 学习材料 | 2026-06-25 | 交互式 HTML 版（teaching/Lesson Lab 风格） |
+| **`index.html`** | 学习材料 | 2026-06-25 | 交互式 HTML 版（teaching/Lesson Lab 风格），兼 GitHub Pages 入口 |
 | **`README.md`** | 索引 | 2026-06-25 | ← 本文件，项目导航 |
 
 > ⚠️ **注意版本对应**：学习手册（md/html）是基于 **V1.0 方案**写的。若 V1.1 有重大方法学变更，学习手册可能需要同步更新（见下方"待办"）。
 
-### 📂 目录外的关联位置
+### 📂 关联位置
 
 - **GitHub 仓库**：[BigBall-Wu/PBC-Numbness-Study](https://github.com/BigBall-Wu/PBC-Numbness-Study)（本项目的官方仓库）
-  - 已部署的在线学习手册（公开访问）
-- **本地部署工作目录**：`D:\桌面\PBC-Numbness-Study\`（git 仓库，index.html + .git；remote 已指向新仓库名）
 - **在线公开网址**：https://bigball-wu.github.io/PBC-Numbness-Study/
 - ⚠️ **旧链接已失效**：曾用仓库名 `pbc-numbness-guide`，2026-06-25 改名为 `PBC-Numbness-Study`。旧网址 `bigball-wu.github.io/pbc-numbness-guide/` 因大小写变化未自动重定向（返回 404），**一切以新链接为准**。
+
+### 🔒 git 仓库说明（重要：合并结构）
+
+本目录**既是项目主目录，也是 git 仓库**（已合并，不再有独立的部署目录）。通过 `.gitignore` 保护私密文档：
+- ✅ **公开推送**：`index.html`、`README.md`、`.gitignore`
+- ❌ **被排除（仅本地）**：所有 `*.docx`（方案/CRF/SAP）、`*.md`（学习手册源）、`sessions/`（会话记录）
+- ⚠️ **安全提示**：在本目录 `git add .` 是安全的（.gitignore 已设好），但**不要手动 `git add` 具体 docx 文件**，否则会绕过保护传到公开仓库。
 
 ---
 
@@ -64,6 +69,7 @@
 - [x] **学习手册 Markdown 版**（54 术语 + 12 自测题 + 逐节导读）
 - [x] **学习手册 HTML 交互版**（teaching/Lesson Lab 风格，含术语卡片/搜索/BNI 演示/自测判分）
 - [x] **GitHub Pages 部署**（已上线，仓库 `BigBall-Wu/PBC-Numbness-Study`，网址见上）
+- [x] **仓库合并**（2026-06-25：项目主目录与 git 仓库合并，用 .gitignore 保护私密文档，删除独立部署目录）
 - [x] **仓库改名**（2026-06-25：`pbc-numbness-guide` → `PBC-Numbness-Study`，作为本项目官方仓库）
 
 ### 🔲 待办 / 可选
@@ -81,8 +87,8 @@
 - **GitHub 账号**：`BigBall-Wu`（注意：不是 leetown1）
 - **仓库**：`PBC-Numbness-Study`（本项目官方仓库，曾用名 `pbc-numbness-guide`）
 - **部署方式**：GitHub Pages，main 分支 / root 目录
-- **更新流程**：改 `学习手册.html` → 复制到 `D:\桌面\PBC-Numbness-Study\index.html` → git 提交推送（remote 已指向新仓库）
-- **网络前提**：本机访问 GitHub 需走代理 `http://127.0.0.1:7897`（git 已配置，curl/gh 需手动设 `HTTPS_PROXY`）
+- **更新流程**（合并后已简化）：改 `index.html` → `git add -A && git commit -m "说明" && git push`（直接在本目录操作，无需复制）
+- **网络前提**：本机访问 GitHub 需走代理 `http://127.0.0.1:7897`（git 已配置全局代理，ZCode 执行时自动带代理；手动操作需确保代理软件在运行）
 
 ### 设计系统（HTML 用）
 - html-anything skill 的 **teaching（Lesson Lab）风格**
