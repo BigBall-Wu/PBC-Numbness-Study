@@ -1,0 +1,19 @@
+# === 私密文档：绝对不要传到公开仓库 ===
+# 研究方案（未发表，含方法学细节）
+*.docx
+
+# === 系统文件 ===
+# ZCode 会话记录（对话历史，隐私）
+/sessions/
+
+# Markdown 源（含完整方案解读，仅供本地编辑，不公开）
+*.md
+# 但 README.md 是公开的项目说明，需要保留
+!README.md
+
+# === 通用排除 ===
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*~

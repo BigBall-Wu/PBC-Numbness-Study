@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-ha-style="teaching">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PBC 术后麻木机制研究 · 一天读懂方案 · Lesson Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#a03b00;--primary-container:#c94c00;--primary-fixed:#ffdbcd;--primary-fixed-dim:#ffb597;
+  --on-primary:#fff;--accent-glow:#E8400D;
+  --secondary:#d5baff;--secondary-container:#7b40e0;--tertiary:#4d44e3;--accent-cyan:#00D4FF;
+  --bg:#fff8f6;--surface:#fff8f6;--surface-lowest:#fff;--surface-low:#fbf2ef;
+  --surface-container:#f5ece9;--surface-high:#efe6e3;
+  --fg-1:#1e1b19;--fg-2:#594138;--fg-muted:#8d7166;
+  --border:rgba(0,0,0,.06);--border-strong:rgba(0,0,0,.12);--outline-variant:#e1bfb2;
+  --green:#10b981;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;
+  --font-headline:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;
+  --font-body:'Plus Jakarta Sans',ui-sans-serif,system-ui,sans-serif;
+  --font-mono:'SF Mono','Menlo',ui-monospace,monospace;
+  --space-xs:4px;--space-sm:8px;--space-md:12px;--space-lg:16px;--space-xl:20px;
+  --space-2xl:24px;--space-3xl:32px;--space-4xl:48px;--space-5xl:64px;
+  --radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:20px;--radius-2xl:28px;--radius-pill:9999px;
+  --shadow-sm:0 1px 2px rgba(30,27,25,.04);--shadow-md:0 4px 12px rgba(30,27,25,.08);
+  --shadow-lg:0 8px 24px rgba(30,27,25,.12);--shadow-accent:0 8px 24px rgba(160,59,0,.15);
+  --teaching-accent:#0f766e;--teaching-accent-soft:#ccfbf1;--teaching-accent-deep:#134e4a;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#060B18;--surface:#0B1426;--surface-lowest:#101D35;--surface-low:#101D35;
+    --surface-container:#162544;--surface-high:#1c2d52;
+    --fg-1:#F8FAFC;--fg-2:#CBD5E1;--fg-muted:#64748B;
+    --border:rgba(255,255,255,.08);--border-strong:rgba(255,255,255,.14);
+    --primary:#FF6B35;--accent-glow:#00D4FF;
+    --shadow-md:0 4px 12px rgba(0,0,0,.4);--shadow-lg:0 8px 24px rgba(0,0,0,.5);
+    --teaching-accent:#2dd4bf;--teaching-accent-soft:#134e4a;--teaching-accent-deep:#5eead4;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{
+  font-family:var(--font-body);background:var(--bg);color:var(--fg-1);
+  line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--primary-fixed);color:var(--fg-1)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:var(--radius-sm)}
+
+/* ===== Layout shell ===== */
+.lesson-shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+.lesson-rail{
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  background:var(--surface-low);border-right:1px solid var(--border);
+  padding:var(--space-2xl) var(--space-lg);z-index:20;
+}
+.lesson-main{min-width:0}
+
+/* ===== Left rail / step rail ===== */
+.rail-brand{display:flex;align-items:center;gap:var(--space-md);margin-bottom:var(--space-2xl)}
+.rail-logo{
+  width:40px;height:40px;border-radius:var(--radius-md);flex-shrink:0;
+  background:linear-gradient(135deg,var(--teaching-accent),var(--teaching-accent-deep));
+  display:grid;place-items:center;color:#fff;font-family:var(--font-headline);font-weight:700;font-size:18px;
+  box-shadow:var(--shadow-accent);
+}
+.rail-title{font-family:var(--font-headline);font-weight:600;font-size:14px;line-height:1.25;color:var(--fg-1)}
+.rail-sub{font-size:11px;color:var(--fg-muted);margin-top:2px}
+
+.rail-section-label{
+  font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--fg-muted);margin:var(--space-2xl) 0 var(--space-sm) var(--space-sm);
+}
+.step-rail{list-style:none;display:flex;flex-direction:column;gap:2px}
+.step-rail a{
+  display:flex;align-items:center;gap:var(--space-md);padding:var(--space-sm) var(--space-md);
+  border-radius:var(--radius-sm);text-decoration:none;color:var(--fg-2);font-size:13.5px;
+  transition:all .15s;border-left:2px solid transparent;line-height:1.3;
+}
+.step-rail a:hover{background:var(--surface-container);color:var(--fg-1)}
+.step-rail a.active{background:var(--teaching-accent-soft);color:var(--teaching-accent-deep);font-weight:600;border-left-color:var(--teaching-accent)}
+@media (prefers-color-scheme:dark){.step-rail a.active{color:var(--teaching-accent-deep)}}
+.step-num{
+  width:22px;height:22px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
+  background:var(--surface-container);color:var(--fg-muted);font-size:11px;font-weight:600;font-family:var(--font-mono);
+}
+.step-rail a.active .step-num{background:var(--teaching-accent);color:#fff}
+.step-rail a.visited .step-num{background:var(--primary);color:#fff}
+
+/* ===== Main: lesson stage ===== */
+.lesson-stage{padding:var(--space-3xl) var(--space-4xl) var(--space-5xl);max-width:920px}
+
+/* Objective banner */
+.objective{
+  background:linear-gradient(135deg,var(--teaching-accent-soft),transparent);
+  border:1px solid var(--border);border-left:4px solid var(--teaching-accent);
+  border-radius:var(--radius-lg);padding:var(--space-xl) var(--space-2xl);margin-bottom:var(--space-3xl);
+  display:flex;gap:var(--space-lg);align-items:flex-start;
+}
+.objective-badge{
+  flex-shrink:0;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--teaching-accent-deep);background:var(--surface-lowest);padding:4px 10px;border-radius:var(--radius-pill);
+  border:1px solid var(--teaching-accent);
+}
+.objective-text{font-size:15px;color:var(--fg-1);line-height:1.55}
+.objective-text b{color:var(--teaching-accent-deep)}
+
+/* Section headers */
+.stage-section{margin-bottom:var(--space-5xl);scroll-margin-top:84px}
+.stage-section h2{
+  font-family:var(--font-headline);font-weight:700;font-size:26px;letter-spacing:-.01em;
+  color:var(--fg-1);margin-bottom:var(--space-sm);display:flex;align-items:center;gap:var(--space-md);
+}
+.stage-section h2 .h-emoji{font-size:24px}
+.stage-section .h-meta{font-size:13px;color:var(--fg-muted);margin-bottom:var(--space-2xl);font-weight:400}
+.stage-section h3{
+  font-family:var(--font-headline);font-weight:600;font-size:18px;color:var(--fg-1);
+  margin-top:var(--space-2xl);margin-bottom:var(--space-md);
+}
+.stage-section p{margin-bottom:var(--space-md);color:var(--fg-2)}
+.stage-section strong{color:var(--fg-1);font-weight:600}
+.stage-section ul{margin:var(--space-md) 0;padding-left:var(--space-2xl)}
+.stage-section li{margin-bottom:var(--space-sm);color:var(--fg-2)}
+.stage-section code{
+  font-family:var(--font-mono);font-size:.88em;background:var(--surface-container);
+  padding:2px 6px;border-radius:var(--radius-sm);color:var(--teaching-accent-deep);
+}
+
+/* Timeline table */
+.day-plan{
+  border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin:var(--space-xl) 0;
+  background:var(--surface-lowest);box-shadow:var(--shadow-sm);
+}
+.day-plan-row{display:grid;grid-template-columns:130px 70px 1fr 1.3fr;border-bottom:1px solid var(--border)}
+.day-plan-row:last-child{border-bottom:none}
+.day-plan-row.head{background:var(--surface-container);font-weight:600;font-size:12px;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.05em}
+.day-plan-row > div{padding:var(--space-md) var(--space-lg);border-right:1px solid var(--border);font-size:13.5px}
+.day-plan-row > div:last-child{border-right:none}
+.day-time{font-family:var(--font-mono);font-weight:600;color:var(--teaching-accent-deep);font-size:12.5px}
+.day-plan-row.head .day-time{color:var(--fg-muted)}
+
+/* Overview map */
+.overview-map{
+  background:var(--surface-lowest);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:var(--space-2xl);margin:var(--space-xl) 0;font-family:var(--font-mono);font-size:12.5px;
+  line-height:1.5;color:var(--fg-2);overflow-x:auto;box-shadow:var(--shadow-sm);
+}
+.overview-map .om-q{color:var(--teaching-accent-deep);font-weight:600}
+.overview-map .om-part{color:var(--primary);font-weight:600}
+
+/* Concept drawer — glossary */
+.glossary-controls{
+  display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-bottom:var(--space-xl);align-items:center;
+}
+.cat-filter{
+  display:inline-flex;align-items:center;gap:var(--space-xs);padding:7px 14px;border-radius:var(--radius-pill);
+  border:1px solid var(--border-strong);background:var(--surface-lowest);color:var(--fg-2);
+  font-size:12.5px;font-weight:500;cursor:pointer;transition:all .15s;font-family:inherit;
+}
+.cat-filter:hover{border-color:var(--teaching-accent);color:var(--teaching-accent-deep)}
+.cat-filter.active{background:var(--teaching-accent);color:#fff;border-color:var(--teaching-accent)}
+.cat-filter .cf-count{font-family:var(--font-mono);font-size:11px;opacity:.8}
+.glossary-search{
+  flex:1;min-width:180px;padding:8px 14px;border-radius:var(--radius-pill);border:1px solid var(--border-strong);
+  background:var(--surface-lowest);color:var(--fg-1);font-family:inherit;font-size:13.5px;
+}
+.glossary-search:focus{outline:none;border-color:var(--teaching-accent)}
+
+.concept-drawer{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:var(--space-lg)}
+.concept-card{
+  background:var(--surface-lowest);border:1px solid var(--border);border-radius:var(--radius-lg);
+  overflow:hidden;transition:box-shadow .2s,border-color .2s;scroll-margin-top:84px;
+}
+.concept-card:hover{box-shadow:var(--shadow-md);border-color:var(--border-strong)}
+.concept-card.dimmed{opacity:.32}
+.cc-head{
+  padding:var(--space-lg) var(--space-xl);cursor:pointer;display:flex;align-items:flex-start;gap:var(--space-md);
+  user-select:none;
+}
+.cc-cat{
+  flex-shrink:0;font-size:10px;font-weight:700;letter-spacing:.04em;padding:3px 8px;border-radius:var(--radius-sm);
+  color:#fff;white-space:nowrap;
+}
+.cc-cat.A{background:#0f766e}.cc-cat.B{background:#7b40e0}.cc-cat.C{background:#a03b00}
+.cc-cat.D{background:#4d44e3}.cc-cat.E{background:#0064a8}.cc-cat.F{background:#be3455}
+.cc-title-wrap{flex:1;min-width:0}
+.cc-title{font-family:var(--font-headline);font-weight:600;font-size:15px;color:var(--fg-1);line-height:1.3}
+.cc-en{font-size:11.5px;color:var(--fg-muted);margin-top:2px;font-style:italic}
+.cc-toggle{
+  flex-shrink:0;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+  background:var(--surface-container);color:var(--fg-muted);font-size:14px;transition:transform .2s,background .2s;
+}
+.concept-card.open .cc-toggle{transform:rotate(45deg);background:var(--teaching-accent);color:#fff}
+.cc-body{
+  max-height:0;overflow:hidden;transition:max-height .3s ease;padding:0 var(--space-xl);
+}
+.concept-card.open .cc-body{max-height:600px;padding:0 var(--space-xl) var(--space-xl)}
+.cc-body p{font-size:13.5px;color:var(--fg-2);margin-bottom:var(--space-sm);line-height:1.55}
+.cc-body .cc-label{font-weight:700;color:var(--fg-1)}
+.cc-mnemonic{
+  margin-top:var(--space-md);padding:var(--space-md) var(--space-lg);background:var(--surface-low);
+  border-radius:var(--radius-sm);border-left:3px solid var(--yellow);font-size:13px;color:var(--fg-1);
+}
+.cc-mnemonic::before{content:"🔑 ";font-size:14px}
+
+/* Try-it: BNI grade explorer */
+.try-control{
+  background:var(--surface-lowest);border:1px solid var(--border);border-radius:var(--radius-xl);
+  padding:var(--space-2xl);margin:var(--space-xl) 0;box-shadow:var(--shadow-sm);
+}
+.try-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--teaching-accent-deep);margin-bottom:var(--space-sm)}
+.try-title{font-family:var(--font-headline);font-weight:600;font-size:17px;margin-bottom:var(--space-lg);color:var(--fg-1)}
+.try-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3xl);align-items:start}
+@media(max-width:680px){.try-row{grid-template-columns:1fr;gap:var(--space-xl)}}
+.try-picker{display:flex;flex-direction:column;gap:var(--space-sm)}
+.grade-btn{
+  text-align:left;padding:var(--space-md) var(--space-lg);border-radius:var(--radius-md);
+  border:1px solid var(--border-strong);background:var(--surface-low);cursor:pointer;
+  font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:var(--space-md);
+}
+.grade-btn:hover{border-color:var(--teaching-accent)}
+.grade-btn.sel{border-color:var(--teaching-accent);background:var(--teaching-accent-soft);box-shadow:var(--shadow-sm)}
+.grade-badge{
+  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;
+  font-family:var(--font-headline);font-weight:700;font-size:14px;color:#fff;
+}
+.try-readout{
+  background:var(--surface-low);border-radius:var(--radius-lg);padding:var(--space-xl);
+  border:1px solid var(--border);min-height:180px;
+}
+.try-readout .ro-grade{font-family:var(--font-headline);font-weight:700;font-size:30px;color:var(--fg-1);margin-bottom:var(--space-xs)}
+.try-readout .ro-desc{font-size:14px;color:var(--fg-2);line-height:1.55}
+.try-readout .ro-flag{margin-top:var(--space-md);font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:var(--radius-pill);display:inline-block}
+
+/* Section guide cards */
+.section-guide{display:flex;flex-direction:column;gap:var(--space-lg)}
+.sg-card{
+  background:var(--surface-lowest);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:var(--space-xl) var(--space-2xl);border-left:4px solid var(--teaching-accent);
+}
+.sg-card .sg-sec{font-family:var(--font-mono);font-size:12px;color:var(--fg-muted);margin-bottom:var(--space-xs)}
+.sg-card h4{font-family:var(--font-headline);font-size:16px;color:var(--fg-1);margin-bottom:var(--space-sm)}
+.sg-card p{font-size:13.5px;color:var(--fg-2);margin:0}
+
+/* Check yourself quiz */
+.check-yourself{display:flex;flex-direction:column;gap:var(--space-xl)}
+.quiz-card{
+  background:var(--surface-lowest);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:var(--space-xl) var(--space-2xl);box-shadow:var(--shadow-sm);
+}
+.quiz-num{
+  display:inline-block;font-family:var(--font-mono);font-size:11px;font-weight:700;
+  background:var(--teaching-accent);color:#fff;padding:3px 10px;border-radius:var(--radius-pill);margin-bottom:var(--space-sm);
+}
+.quiz-q{font-family:var(--font-headline);font-weight:600;font-size:15.5px;color:var(--fg-1);margin-bottom:var(--space-lg);line-height:1.45}
+.quiz-opts{display:flex;flex-direction:column;gap:var(--space-sm)}
+.quiz-opt{
+  text-align:left;padding:var(--space-md) var(--space-lg);border-radius:var(--radius-md);
+  border:1px solid var(--border-strong);background:var(--surface-low);cursor:pointer;font-family:inherit;
+  font-size:13.5px;color:var(--fg-2);transition:all .15s;display:flex;align-items:center;gap:var(--space-md);
+}
+.quiz-opt:hover:not(.locked){border-color:var(--teaching-accent)}
+.quiz-opt .qo-mark{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border-strong);flex-shrink:0;display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--fg-muted)}
+.quiz-opt.correct{border-color:var(--green);background:#ecfdf5;color:#065f46}
+.quiz-opt.correct .qo-mark{background:var(--green);color:#fff;border-color:var(--green)}
+@media(prefers-color-scheme:dark){.quiz-opt.correct{background:rgba(16,185,129,.12);color:#6ee7b7}}
+.quiz-opt.wrong{border-color:var(--red);background:#fef2f2;color:#991b1b}
+.quiz-opt.wrong .qo-mark{background:var(--red);color:#fff;border-color:var(--red)}
+@media(prefers-color-scheme:dark){.quiz-opt.wrong{background:rgba(239,68,68,.12);color:#fca5a5}}
+.quiz-opt.locked{cursor:default;opacity:.7}
+.quiz-feedback{
+  margin-top:var(--space-md);padding:var(--space-md) var(--space-lg);border-radius:var(--radius-md);
+  font-size:13px;line-height:1.5;display:none;
+}
+.quiz-feedback.show{display:block}
+.quiz-feedback.good{background:#ecfdf5;color:#065f46;border-left:3px solid var(--green)}
+@media(prefers-color-scheme:dark){.quiz-feedback.good{background:rgba(16,185,129,.12);color:#6ee7b7}}
+.quiz-feedback.bad{background:#fff7ed;color:#9a3412;border-left:3px solid var(--yellow)}
+@media(prefers-color-scheme:dark){.quiz-feedback.bad{background:rgba(245,158,11,.12);color:#fcd34d}}
+
+.quiz-score{
+  margin-top:var(--space-xl);padding:var(--space-xl) var(--space-2xl);border-radius:var(--radius-lg);
+  background:linear-gradient(135deg,var(--teaching-accent-soft),transparent);border:1px solid var(--border);
+  text-align:center;
+}
+.quiz-score .qs-num{font-family:var(--font-headline);font-weight:700;font-size:32px;color:var(--teaching-accent-deep)}
+.quiz-score .qs-desc{font-size:13px;color:var(--fg-2);margin-top:var(--space-xs)}
+
+/* Recap strip */
+.recap-strip{
+  margin-top:var(--space-4xl);background:var(--surface-lowest);border:1px solid var(--border);
+  border-radius:var(--radius-xl);padding:var(--space-3xl);box-shadow:var(--shadow-md);
+}
+.recap-strip h3{font-family:var(--font-headline);font-size:20px;margin-bottom:var(--space-xl);color:var(--fg-1)}
+.recap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-lg)}
+.recap-item{padding:var(--space-lg);border-radius:var(--radius-md);background:var(--surface-low)}
+.recap-item .ri-icon{font-size:22px;margin-bottom:var(--space-sm)}
+.recap-item .ri-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--teaching-accent-deep);margin-bottom:var(--space-xs)}
+.recap-item .ri-text{font-size:13.5px;color:var(--fg-2);line-height:1.5}
+
+/* Misc callouts */
+.callout{
+  margin:var(--space-lg) 0;padding:var(--space-lg) var(--space-xl);border-radius:var(--radius-md);
+  background:var(--surface-low);border-left:3px solid var(--primary);font-size:13.5px;color:var(--fg-2);
+}
+.callout.tip{border-left-color:var(--teaching-accent)}
+.callout.warn{border-left-color:var(--yellow)}
+.callout b{color:var(--fg-1)}
+
+/* Mobile rail toggle */
+.rail-toggle{
+  display:none;position:fixed;top:var(--space-lg);right:var(--space-lg);z-index:50;
+  width:44px;height:44px;border-radius:var(--radius-md);border:1px solid var(--border-strong);
+  background:var(--surface-lowest);color:var(--fg-1);cursor:pointer;align-items:center;justify-content:center;
+  font-size:20px;box-shadow:var(--shadow-md);
+}
+
+@media(max-width:900px){
+  .lesson-shell{grid-template-columns:1fr}
+  .lesson-rail{
+    position:fixed;left:-280px;width:260px;transition:left .25s;top:0;padding-top:var(--space-3xl);
+  }
+  .lesson-rail.open{left:0}
+  .rail-toggle{display:flex}
+  .lesson-stage{padding:var(--space-2xl) var(--space-xl) var(--space-4xl);padding-top:var(--space-5xl)}
+  .rail-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:19}
+  .rail-backdrop.show{display:block}
+}
+@media(max-width:560px){
+  .day-plan-row{grid-template-columns:1fr;font-size:12.5px}
+  .day-plan-row > div{border-right:none;border-bottom:1px solid var(--border);padding:var(--space-sm) var(--space-md)}
+  .day-plan-row.head{display:none}
+  .concept-drawer{grid-template-columns:1fr}
+  .day-time::before{content:"⏰ "}
+}
+
+/* prefers-reduced-motion */
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+}
+
+/* print */
+@media print{
+  .lesson-rail,.rail-toggle,.glossary-controls{display:none}
+  .lesson-shell{display:block}
+  .concept-card.open .cc-body{max-height:none}
+  .cc-body{max-height:none!important}
+}
+</style>
+</head>
+<body>
+
+<button class="rail-toggle" id="railToggle" aria-label="打开/关闭目录">☰</button>
+<div class="rail-backdrop" id="railBackdrop"></div>
+
+<div class="lesson-shell">
+
+  <!-- ============ LEFT STEP RAIL ============ -->
+  <nav class="lesson-rail" id="lessonRail" aria-label="课程导航">
+    <div class="rail-brand">
+      <div class="rail-logo">PBC</div>
+      <div>
+        <div class="rail-title">PBC 术后麻木机制</div>
+        <div class="rail-sub">一天读懂方案 · Lesson Lab</div>
+      </div>
+    </div>
+
+    <div class="rail-section-label">学习路线 · 7 步</div>
+    <ol class="step-rail" id="stepRail">
+      <li><a href="#sec-objective"><span class="step-num">1</span>学习目标</a></li>
+      <li><a href="#sec-plan"><span class="step-num">2</span>一天学习规划</a></li>
+      <li><a href="#sec-map"><span class="step-num">3</span>方案速览地图</a></li>
+      <li><a href="#sec-glossary"><span class="step-num">4</span>名词手册（核心）</a></li>
+      <li><a href="#sec-tryit"><span class="step-num">5</span>动手试：BNI 分级</a></li>
+      <li><a href="#sec-guide"><span class="step-num">6</span>逐节导读</a></li>
+      <li><a href="#sec-quiz"><span class="step-num">7</span>自测（12题）</a></li>
+    </ol>
+
+    <div class="rail-section-label">术语分类速查</div>
+    <ol class="step-rail">
+      <li><a href="#cat-A"><span class="step-num" style="background:#0f766e;color:#fff">A</span>疾病基础</a></li>
+      <li><a href="#cat-B"><span class="step-num" style="background:#7b40e0;color:#fff">B</span>手术解剖</a></li>
+      <li><a href="#cat-C"><span class="step-num" style="background:#a03b00;color:#fff">C</span>临床量表</a></li>
+      <li><a href="#cat-D"><span class="step-num" style="background:#4d44e3;color:#fff">D</span>统计方法</a></li>
+      <li><a href="#cat-E"><span class="step-num" style="background:#0064a8;color:#fff">E</span>神经影像</a></li>
+      <li><a href="#cat-F"><span class="step-num" style="background:#be3455;color:#fff">F</span>脑区解剖</a></li>
+    </ol>
+
+    <div class="rail-section-label">附</div>
+    <ol class="step-rail">
+      <li><a href="#sec-recap"><span class="step-num">★</span>回顾要点</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============ MAIN STAGE ============ -->
+  <main class="lesson-main">
+    <div class="lesson-stage">
+
+      <!-- Objective -->
+      <section class="stage-section" id="sec-objective">
+        <div class="objective">
+          <span class="objective-badge">学习目标</span>
+          <p class="objective-text">
+            用约 <b>6–8 小时</b>，从零读懂《基于临床-影像-fMRI 的经皮球囊压迫术治疗三叉神经痛术后麻木机制研究》方案——
+            理解 <b>三叉神经痛 → PBC 手术 → 术后麻木 → 预测与机制</b> 的完整逻辑，掌握其中 <b>50+ 专业术语</b>，
+            并能回答方法学与神经影像层面的关键问题。
+          </p>
+        </div>
+
+        <div class="callout tip">
+          <b>这很重要，因为</b> 本研究方案的核心创新是把"临床现象 → 数学预测 → 神经机制"串成一条完整证据链：
+          用 200 例数据首次描绘麻木的"动态恢复轨迹"，据此建预测模型，再用 30 例 fMRI 探索大脑机制。记住这条主线，所有细节都是围绕它展开。
+        </div>
+      </section>
+
+      <!-- Section 2: Day plan -->
+      <section class="stage-section" id="sec-plan">
+        <h2><span class="h-emoji">🗓️</span>一天学习规划</h2>
+        <p class="h-meta">建议按时间块推进 · 全天约 6–8 小时</p>
+
+        <div class="day-plan">
+          <div class="day-plan-row head">
+            <div>时间段</div><div>时长</div><div>任务</div><div>对应本手册</div>
+          </div>
+          <div class="day-plan-row"><div class="day-time">09:00–10:00</div><div>60 min</div><div>通读方案原文一遍，圈出不认识的词</div><div>原方案全文</div></div>
+          <div class="day-plan-row"><div class="day-time">10:00–11:30</div><div>90 min</div><div>学"疾病/手术"板块，搞懂 TN 与 PBC</div><div>术语 A + B 类</div></div>
+          <div class="day-plan-row"><div class="day-time">11:30–12:00</div><div>30 min</div><div>学"临床量表"板块</div><div>术语 C 类</div></div>
+          <div class="day-plan-row"><div class="day-time">14:00–15:30</div><div>90 min</div><div>学"统计学方法"（最难，重点）</div><div>术语 D 类</div></div>
+          <div class="day-plan-row"><div class="day-time">15:30–16:30</div><div>60 min</div><div>学"神经影像与脑科学"</div><div>术语 E + F 类</div></div>
+          <div class="day-plan-row"><div class="day-time">16:30–17:30</div><div>60 min</div><div>对照"逐节导读"重读方案</div><div>第 6 步</div></div>
+          <div class="day-plan-row"><div class="day-time">19:00–20:00</div><div>60 min</div><div>用"自测问答"检验理解</div><div>第 7 步（12 题）</div></div>
+        </div>
+
+        <h3>三条阅读策略</h3>
+        <ul>
+          <li><strong>先建立"骨架"，再填"血肉"</strong>：方案骨架是 三叉神经痛 → PBC → 术后麻木 → 为什么？能预测吗？怎么恢复？</li>
+          <li><strong>方案分三部分 = 三个子研究</strong>：第一部分<strong>找规律</strong>（回顾，200 例）、第二部分<strong>做预测</strong>（建模）、第三部分<strong>找机制</strong>（前瞻，30 例 fMRI）。</li>
+          <li><strong>遇到术语先跳过</strong>：第一遍通读保持逻辑连贯，第二遍再回来查术语手册。</li>
+        </ul>
+      </section>
+
+      <!-- Section 3: Overview map -->
+      <section class="stage-section" id="sec-map">
+        <h2><span class="h-emoji">🗺️</span>方案速览地图</h2>
+        <p class="h-meta">先看这张图，建立全局观</p>
+
+        <div class="overview-map"><pre>
+<span class="om-q">┌──────────────────────────────────────────────────────────┐
+│   研究总问题：PBC 术后为什么会麻木？能预测吗？             │
+└──────────────────────────────────────────────────────────┘</span>
+                        │
+      ┌──────────────────┼──────────────────┐
+      ▼                  ▼                  ▼
+ <span class="om-part">【第一部分】</span>      <span class="om-part">【第二部分】</span>      <span class="om-part">【第三部分】</span>
+   找规律(回顾)        做预测(建模)        找机制(前瞻)
+   200 例患者          同 200 例           30 例患者
+      │                  │                  │
+ 危险因素分析        LASSO + 列线图       静息态 fMRI
+ + GBTM 轨迹         Bootstrap 验证       术前 vs 术后 1 月
+      │                  │                  │
+ "麻木分几条曲线"    "会不会麻木"         "大脑哪里变了"
+</pre></div>
+
+        <div class="callout">
+          <b>一句话创新点</b>：用 200 例真实世界数据，<b>首次</b>描绘 PBC 术后麻木的"动态恢复轨迹"，据此建立预测模型；再用 30 例 fMRI <b>首次</b>探索麻木的大脑机制——临床现象 → 数学预测 → 神经机制。
+        </div>
+      </section>
+
+      <!-- Section 4: Glossary -->
+      <section class="stage-section" id="sec-glossary">
+        <h2><span class="h-emoji">📖</span>名词手册（核心）</h2>
+        <p class="h-meta">50+ 专业术语 · 分 6 大类 · 点击卡片展开详解 · 支持搜索与筛选</p>
+
+        <div class="glossary-controls">
+          <button class="cat-filter active" data-cat="ALL">全部 <span class="cf-count" id="cnt-ALL"></span></button>
+          <button class="cat-filter" data-cat="A"><span style="color:#0f766e">●</span> 疾病基础 <span class="cf-count" id="cnt-A"></span></button>
+          <button class="cat-filter" data-cat="B"><span style="color:#7b40e0">●</span> 手术解剖 <span class="cf-count" id="cnt-B"></span></button>
+          <button class="cat-filter" data-cat="C"><span style="color:#a03b00">●</span> 临床量表 <span class="cf-count" id="cnt-C"></span></button>
+          <button class="cat-filter" data-cat="D"><span style="color:#4d44e3">●</span> 统计方法 <span class="cf-count" id="cnt-D"></span></button>
+          <button class="cat-filter" data-cat="E"><span style="color:#0064a8">●</span> 神经影像 <span class="cf-count" id="cnt-E"></span></button>
+          <button class="cat-filter" data-cat="F"><span style="color:#be3455">●</span> 脑区解剖 <span class="cf-count" id="cnt-F"></span></button>
+          <input type="search" class="glossary-search" id="glossSearch" placeholder="🔍 搜索术语…（如 GBTM、ALFF、列线图）" aria-label="搜索术语">
+        </div>
+
+        <div class="concept-drawer" id="conceptDrawer"><!-- cards injected by JS --></div>
+      </section>
+
+      <!-- Section 5: Try-it BNI -->
+      <section class="stage-section" id="sec-tryit">
+        <h2><span class="h-emoji">🧪</span>动手试：BNI 面部麻木分级</h2>
+        <p class="h-meta">点击左侧任一级别，右侧即时显示含义与本研究中的判定意义</p>
+
+        <div class="try-control">
+          <div class="try-row">
+            <div>
+              <div class="try-label">试着选一个级别</div>
+              <div class="try-title">BNI 面部麻木分级（Ⅰ–Ⅴ）</div>
+              <div class="try-picker" id="bniPicker"></div>
+            </div>
+            <div class="try-readout" id="bniReadout">
+              <div class="ro-grade" id="roGrade">—</div>
+              <div class="ro-desc" id="roDesc">点击左侧任一级别查看详情。注意：本研究把 <strong>BNI ≥ Ⅲ 级</strong> 定义为"重度麻木"。</div>
+              <div class="ro-flag" id="roFlag" style="display:none"></div>
+            </div>
+          </div>
+          <div class="callout" style="margin-top:var(--space-xl)">
+            <b>这很重要，因为</b> BNI 麻木分级是本研究 <strong>GBTM 轨迹建模的因变量</strong>（用术后 1/3/6/12 月的分级画恢复曲线），也是预测模型与敏感性分析的结局指标。理解各级别含义是读懂统计部分的前提。
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 6: Section guide -->
+      <section class="stage-section" id="sec-guide">
+        <h2><span class="h-emoji">📑</span>方案逐节导读</h2>
+        <p class="h-meta">按方案原文章节顺序 · 告诉你每节在干什么、重点看什么</p>
+
+        <div class="section-guide">
+          <div class="sg-card"><div class="sg-sec">第 1 节 · 研究背景</div><h4>双刃剑假说与 3 个研究空白</h4><p>TN 常见 → PBC 是好办法但术后麻木严重 → 麻木是"双刃剑"（适度=好，过度=差）→ 现有研究 3 个空白（无预测模型、无轨迹研究、无 fMRI 机制）。<strong>重点理解"双刃剑"假说。</strong></p></div>
+          <div class="sg-card"><div class="sg-sec">第 2 节 · 研究目的</div><h4>三个目的 = 三部分研究</h4><p>找规律（危险因素 + GBTM 轨迹）、做预测（列线图模型）、找机制（fMRI 脑可塑性）。务必把这三个目的背下来。</p></div>
+          <div class="sg-card"><div class="sg-sec">第 3 节 · 研究设计</div><h4>样本 200 / 200 / 30 与样本量依据</h4><p>三部分样本分别为 200、200、30。<strong>样本量依据（EPV 原则、G*Power 计算）是方案严谨性的体现。</strong></p></div>
+          <div class="sg-card"><div class="sg-sec">CRF · 调查内容</div><h4>4 类采集变量</h4><p>①基线 ②影像+手术 ③随访 ④fMRI。这是后面所有分析的"原料"。</p></div>
+          <div class="sg-card"><div class="sg-sec">第 5 节 · 统计分析（最关键）⭐</div><h4>三部分的统计流水线</h4><p>第一部分：单因素→多因素 Logistic→K-M→GBTM→多项 Logistic。第二部分：LASSO→Logistic→列线图→Bootstrap+校准+DCA。第三部分：fMRI 预处理→ALFF/ReHo→功能连接+ICA→Spearman 相关。配合 D 类术语精读。</p></div>
+          <div class="sg-card"><div class="sg-sec">第 6–9 节</div><h4>偏倚控制、质量、安全、伦理</h4><p>四类偏倚控制；fMRI 无创需排除金属禁忌；回顾性申请免除知情同意，前瞻性必须书面知情同意。</p></div>
+        </div>
+      </section>
+
+      <!-- Section 7: Quiz -->
+      <section class="stage-section" id="sec-quiz">
+        <h2><span class="h-emoji">✅</span>自测 · Check Yourself</h2>
+        <p class="h-meta">12 题 · 即时反馈 · 答对 9 题以上算读懂</p>
+
+        <div class="check-yourself" id="quizContainer"><!-- injected --></div>
+
+        <div class="quiz-score" id="quizScore" style="display:none">
+          <div class="qs-num"><span id="scoreNum">0</span> / 12</div>
+          <div class="qs-desc" id="scoreDesc"></div>
+        </div>
+      </section>
+
+      <!-- Recap -->
+      <section class="recap-strip" id="sec-recap">
+        <h3>📌 回顾要点 · Recap</h3>
+        <div class="recap-grid">
+          <div class="recap-item"><div class="ri-icon">🧠</div><div class="ri-label">核心主线</div><div class="ri-text">临床现象（麻木）→ 数学预测（列线图）→ 神经机制（fMRI），一条完整证据链。</div></div>
+          <div class="recap-item"><div class="ri-icon">🎯</div><div class="ri-label">三大方法</div><div class="ri-text">GBTM 画轨迹、LASSO+列线图做预测、rs-fMRI 找机制。三者递进。</div></div>
+          <div class="recap-item"><div class="ri-icon">🔑</div><div class="ri-label">关键术语</div><div class="ri-text">PBC、Meckel 腔、BNI 分级、GBTM、列线图、AUC/DCA、ALFF/ReHo、VPM→S1→ACC。</div></div>
+          <div class="recap-item"><div class="ri-icon">⚠️</div><div class="ri-label">常见误区</div><div class="ri-text">别把 BNI 疼痛分级和麻木分级搞混——两者都是 Ⅰ–Ⅴ 级，但判定线不同。</div></div>
+          <div class="recap-item"><div class="ri-icon">❓</div><div class="ri-label">下一步探索</div><div class="ri-text">深入 lcmm 包实操、glmnet 的 lambda 选择、或 DPARSF 预处理流程。</div></div>
+          <div class="recap-item"><div class="ri-icon">📖</div><div class="ri-label">延伸阅读</div><div class="ri-text">见配套 Markdown 手册附录：Lancet TN 综述、glmnet 官方、DCA 指南、ALFF 综述。</div></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+/* ===================== GLOSSARY DATA ===================== */
+const TERMS = [
+  // A 疾病基础
+  {cat:"A",title:"原发性三叉神经痛",en:"Trigeminal Neuralgia, TN",
+    def:"一种慢性神经病理性疼痛，特点是三叉神经分布区（面部）反复发作电击样、刀割样剧痛，每次数秒至数分钟，常由洗脸、吃饭、微风触发。",
+    use:"本研究的目标疾病，所有患者都是原发性 TN 并接受 PBC 手术。年发病率约 4.3–5.5/10 万，女性多于男性，随年龄增长升高。",
+    mem:"面部'闪电样痛'，老年女性多见。"},
+  {cat:"A",title:"三叉神经三分支 V1/V2/V3",en:"Trigeminal divisions",
+    def:"三叉神经分三支支配面部感觉：V1 眼支（额/眼眶）、V2 上颌支（颊/上唇）、V3 下颌支（下颌/下唇/咀嚼肌）。",
+    use:"CRF 记录'疼痛分支'，不同分支受累影响麻木部位与恢复。",
+    mem:"从上到下 V1→V2→V3 = 额→颊→下颌。"},
+  {cat:"A",title:"神经病理性疼痛",en:"Neuropathic Pain",
+    def:"由神经系统本身损伤或疾病引起的疼痛（区别于组织损伤引起的伤害感受性疼痛）。TN 是典型代表。",
+    use:"背景知识，理解 TN 性质。"},
+  {cat:"A",title:"典型 vs 非典型 TN",en:"Typical vs Atypical TN",
+    def:"典型=发作性电击样、有触发点、发作间期无症状；非典型=伴持续灼痛或性质不典型。",
+    use:"CRF 记录疼痛类型，作为基线特征与潜在影响因素。"},
+
+  // B 手术解剖
+  {cat:"B",title:"经皮球囊压迫术",en:"Percutaneous Balloon Compression, PBC",
+    def:"治疗 TN 的微创手术（1983 年 Mullan 首报）。细针经皮穿刺（经卵圆孔）把微小球囊送入 Meckel 腔，充气压三叉神经节数分钟，损伤感觉纤维阻断痛觉传导。优点：即刻镇痛率高、时间短、适合老弱。",
+    use:"所有 200+30 例患者均接受 PBC，研究的就是术后麻木问题。主要代价：术后面部麻木发生率 97.1%–100%。",
+    mem:"进针→放球囊→充气压神经→止痛，但代价是麻木。"},
+  {cat:"B",title:"Meckel 腔（三叉神经腔）",en:"Meckel's Cave",
+    def:"颅内含脑脊液的硬脑膜隐窝，位于中颅窝后内侧、岩骨尖附近，内有三叉神经节（半月神经节）和神经根。是硬脑膜从后颅窝向前延伸形成的囊袋。",
+    use:"PBC 把球囊放进这里压神经节，所以 Meckel 腔形态/大小直接决定球囊放置与压迫效果。本研究测其'扁平度'（最长径/最短径）作预测指标。",
+    mem:"装着三叉神经节的'小房子'，PBC 在这里操作。"},
+  {cat:"B",title:"球囊形态（梨形/非梨形）",en:"Balloon shape",
+    def:"PBC 术中球囊充气后形状。'梨形'是理想形态，提示位置正确、压迫充分均匀；非梨形（椭圆/球形）提示位置欠佳。",
+    use:"作为手术参数记录，分析其与麻木关系。梨形通常预示更好镇痛。",
+    mem:"梨形=放对了；非梨形=可能没放好。"},
+  {cat:"B",title:"球囊压力/时间/容积",en:"Balloon pressure/time/volume",
+    def:"PBC 三个核心可调参数：压力(kPa)决定压迫强度；时间(秒)决定持续时间；容积(mL)决定球囊大小。",
+    use:"均为手术参数，作预测麻木候选变量。逻辑：压力越大/时间越长/容积越大→损伤越重→镇痛越彻底但麻木可能越重（双刃剑）。",
+    mem:"压力×时间×容积=压迫'总量'，与麻木正相关。"},
+  {cat:"B",title:"神经血管压迫 NVC",en:"Neurovascular Compression",
+    def:"三叉神经根附近血管（常为小脑上动脉）骑跨压迫神经，是 TN 重要发病机制，也是微血管减压术 MVD 的理论基础。",
+    use:"MRI 判断'有/无'，作为基线影像特征。"},
+  {cat:"B",title:"三叉神经截面积",en:"Trigeminal nerve cross-sectional area",
+    def:"MRI 上测量三叉神经横截面积。神经萎缩（变细）提示长期损伤。参考引文[3]：近端萎缩与 PBC 良好预后及持续麻木相关。",
+    use:"影像学指标，作候选预测变量。"},
+
+  // C 临床量表
+  {cat:"C",title:"BNI 疼痛强度分级",en:"BNI Pain Intensity Scale",
+    def:"Barrow 神经学研究所制定的疼痛分级，TN 疗效评估最常用。5 级：Ⅰ无痛不需药 / Ⅱ偶痛不需或少药 / Ⅲ明显痛但药可控 / Ⅳ药控制不佳 / Ⅴ严重难控。",
+    use:"本研究：治疗有效=BNI Ⅰ–Ⅲ；疼痛复发=术后 12 月 BNI ≥ Ⅲ 级。",
+    mem:"Ⅰ=最好，Ⅴ=最差；复发判定线划在 Ⅲ 级。"},
+  {cat:"C",title:"BNI 面部麻木分级",en:"BNI Facial Numbness Scale",
+    def:"BNI 专门评估麻木的量表：Ⅰ无麻木 / Ⅱ轻度不困扰 / Ⅲ有些困扰 / Ⅳ相当困扰 / Ⅴ严重干扰日常。Ⅰ–Ⅲ可接受，Ⅳ–Ⅴ不满意。",
+    use:"GBTM 轨迹建模的因变量（术后1/3/6/12月分级画轨迹）；重度麻木=BNI ≥ Ⅲ；预测模型主要结局=BNI ≥ Ⅱ。",
+    mem:"Ⅰ–Ⅲ可接受，Ⅳ–Ⅴ难受；越靠后越严重。"},
+  {cat:"C",title:"NRS 数字疼痛评分",en:"Numerical Rating Scale",
+    def:"患者用 0–10 整数评价疼痛强度，0=无痛，10=最痛。最简单常用。",
+    use:"术前及各随访点评估，作疼痛连续量化指标。",
+    mem:"0–10 分自评，越大越痛。"},
+  {cat:"C",title:"FPS 佩恩面部疼痛量表",en:"Faces Pain Scale",
+    def:"展示 6–8 张从微笑到痛苦哭泣的表情图，患者选最符合的脸。适合文化程度低/老年人。",
+    use:"与 NRS 互补评估疼痛，可交叉验证。",
+    mem:"看脸选痛，不识字也能用。"},
+  {cat:"C",title:"PASS-20 疼痛焦虑量表",en:"Pain Anxiety Symptoms Scale",
+    def:"20 条目评估疼痛相关焦虑，每条 0–5 分，总分越高焦虑越重。含 4 维度：认知焦虑、生理焦虑、逃避行为、疼痛恐惧。",
+    use:"术前及随访评估，焦虑影响疼痛主观感受与满意度，是重要混杂/中介因素。",
+    mem:"20 题、0–5 分，测'怕痛'的心理。"},
+  {cat:"C",title:"卡马西平/奥卡西平",en:"Carbamazepine/Oxcarbazepine",
+    def:"治疗 TN 一线口服药，均为钠通道阻滞剂类抗惊厥药。卡马西平传统首选，奥卡西平副作用较小。",
+    use:"记录术前及随访剂量(mg/日)，评估药物依赖（疼痛控制是否仍需药）。"},
+
+  // D 统计方法
+  {cat:"D",title:"EPV 原则",en:"Events Per Variable",
+    def:"Logistic 回归样本量经验法则：每纳入 1 个预测变量，结局事件至少 10 例（EPV ≥ 10），否则易过拟合。",
+    use:"复发 40–50 例→4–5 变量；重度麻木 20–30 例→2–3 变量；主要结局 120–160 例→≤8 变量。",
+    mem:"1 变量配 10 事件，是建模'安全线'。"},
+  {cat:"D",title:"Logistic 回归",en:"Logistic Regression",
+    def:"结局为二分类（复发/不复发）时用的回归模型，输出发生概率与各变量 OR 值。单因素(逐个看,P<0.10纳入)→多因素(一起建模看独立影响)→逐步回归(AIC自动选变量)。",
+    use:"第一部分核心分析，输出各危险因素 OR 及 95%CI。",
+    mem:"结局'是/否'时用；输出'某因素让风险变几倍'。"},
+  {cat:"D",title:"OR 与 95%CI",en:"Odds Ratio & Confidence Interval",
+    def:"OR=某因素存在时结局胜算(odds)是无该因素时的几倍。OR>1 风险因素，<1 保护因素，=1 无关。95%CI=真实 OR 有 95% 概率落在此范围，包含 1 则无统计学意义。",
+    use:"每个危险因素都报告 OR 及 95%CI。",
+    mem:"OR 倍数 >1 危险，<1 保护；CI 不跨过 1 才算数。"},
+  {cat:"D",title:"AIC 准则",en:"Akaike Information Criterion",
+    def:"衡量模型好坏指标，综合拟合度与复杂度（变量个数），AIC 越小越好。用于多候选模型选最优。",
+    use:"多因素 Logistic 逐步回归用 AIC 选变量组合。",
+    mem:"AIC 小者为优，惩罚变量过多。"},
+  {cat:"D",title:"Kaplan-Meier 曲线 & Log-rank",en:"Survival analysis",
+    def:"K-M 曲线画'随时间推移还有多少比例没发生事件（如没复发）'的下降曲线，能处理失访（删失）。Log-rank 检验比较两条曲线有无显著差异。",
+    use:"画疼痛复发生存曲线，比较不同麻木轨迹组的复发差异。",
+    mem:"K-M 看随时间'幸存率'，Log-rank 比两条线差没差。"},
+  {cat:"D",title:"GBTM 群组化轨迹建模 ⭐",en:"Group-Based Trajectory Modeling",
+    def:"纵向数据分析法。假设人群存在几个'隐藏亚组'，每组有自己随时间变化的轨迹。能把患者自动分成几条'恢复轨迹'（如快速恢复/缓慢恢复/持续麻木组）。",
+    use:"以术后1/3/6/12月 BNI 麻木分级为因变量，拟合 2-4 条轨迹，按 BIC(越小越好)和 AvePP(≥0.7)选模。工具=R 包 lcmm。再用多项 Logistic 分析轨迹归属预测因素。",
+    mem:"把'乱糟糟的个体曲线'归成几条有代表性的'恢复路线'，是本研究灵魂。"},
+  {cat:"D",title:"BIC & AvePP",en:"Bayesian Info Criterion & Average Posterior Probability",
+    def:"BIC=模型选择指标，越小越好，兼顾拟合与简洁。AvePP=每个患者被分到某轨迹概率的平均值，≥0.7 表示分类质量好。",
+    use:"在 2/3/4 条轨迹间选最优（BIC）；验证分组可靠性（AvePP）。",
+    mem:"BIC 比模型优劣(小为优)，AvePP 查分组质量(大为好)。"},
+  {cat:"D",title:"多项 Logistic 回归",en:"Multinomial Logistic Regression",
+    def:"结局≥3 个无序类别时（如轨迹1/2/3）用的回归，是 Logistic 的多类别推广。",
+    use:"因变量=患者属哪条 GBTM 轨迹，自变量=各基线因素。"},
+  {cat:"D",title:"LASSO 回归 ⭐",en:"Least Absolute Shrinkage & Selection Operator",
+    def:"带变量筛选功能的回归。在普通回归上加'惩罚项'，自动把不重要变量系数压缩到 0，同时完成筛选和建模。候选变量多/样本相对少时比逐步回归稳健。",
+    use:"第二部分先用 LASSO(10 折交叉验证)筛变量，lambda.1se 偏好简洁模型(变量更少)；再 Logistic+列线图。",
+    mem:"LASSO=自动'瘦身'的回归，lambda.1se=要更精简的版本。"},
+  {cat:"D",title:"lambda.1se vs lambda.min",en:"LASSO lambda selection",
+    def:"lambda 控制惩罚力度。lambda.min=使交叉验证误差最小的 λ(变量多拟合好)；lambda.1se=在最小误差一个标准误范围内最大的 λ(变量更少更简洁)。本研究选 lambda.1se。",
+    use:"偏好简洁、泛化性更好的模型。",
+    mem:".1se 更精简，.min 更拟合。"},
+  {cat:"D",title:"列线图 ⭐",en:"Nomogram",
+    def:"把预测模型图形化的工具。每变量上方一标尺，按患者取值累加得分，总分对应预测概率（如'麻木概率 70%'）。",
+    use:"第二部分核心产出——PBC 术后麻木列线图预测模型。",
+    mem:"把多变量回归'翻译'成一张可打分的尺子图。"},
+  {cat:"D",title:"AUC（ROC 曲线下面积）",en:"Area Under ROC Curve",
+    def:"衡量模型区分度（能否分开'会麻木'和'不会麻木'）。范围 0.5–1.0，0.7–0.8 尚可，0.8–0.9 好，>0.9 优秀。",
+    use:"模型验证三件套之一（区分度）。"},
+  {cat:"D",title:"校准曲线 + Hosmer-Lemeshow",en:"Calibration",
+    def:"衡量模型准不准：预测概率与实际发生率是否吻合。曲线越贴近 45° 对角线越好；H-L 检验 P>0.05 表示校准良好。",
+    use:"模型验证三件套之二（准确度）。"},
+  {cat:"D",title:"DCA 决策曲线分析",en:"Decision Curve Analysis",
+    def:"衡量模型临床实用价值。计算不同决策阈值下的净获益(net benefit)，曲线在'全部治疗'和'都不治疗'参考线之上说明有用。",
+    use:"模型验证三件套之三（临床实用）。",
+    mem:"三件套：AUC 看区分、校准看准确、DCA 看实用。"},
+  {cat:"D",title:"Bootstrap 重抽样",en:"Bootstrap resampling",
+    def:"有放回反复抽样(本研究 1000 次)评估模型稳定性。能算 optimism-corrected AUC(校正'自我乐观偏差'的 AUC)，即模型在新数据上的真实表现。",
+    use:"第二部分内部验证。模型在训练数据上总偏乐观，Bootstrap 模拟外部验证。",
+    mem:"反复抽样测稳健，校正 AUC 更真实。"},
+  {cat:"D",title:"5 折交叉验证",en:"5-fold Cross-Validation",
+    def:"数据均分 5 份，轮流用 4 份训练/1 份测试，重复 5 次得平均 AUC 和标准差。内部验证另一方法，与 Bootstrap 互补。",
+    use:"第二部分内部验证。"},
+  {cat:"D",title:"敏感性分析",en:"Sensitivity Analysis",
+    def:"换结局定义或方法重做，看结论稳不稳。",
+    use:"把结局从'主要结局(BNI≥Ⅱ)'换成'重度麻木(BNI≥Ⅲ)'重做，只报 OR 不建模型(事件少)。"},
+  {cat:"D",title:"Bonferroni / FWE 校正",en:"Multiple comparison correction",
+    def:"多次检验时假阳性增加，需提高门槛。Bonferroni=阈值 0.05÷检验次数(严格保守)，Logistic 用它；FWE=控制'整图至少 1 个假阳性'概率，fMRI 簇水平用它。",
+    mem:"检验做得多→门槛抬高→减少假阳性。"},
+  {cat:"D",title:"缺失值处理",en:"Missing data handling",
+    def:"完整病例分析=删缺失个案(缺失<5%安全)；MICE 多重插补=用其他变量预测填补、重复多次取平均(缺失 5%–20% 用，R 的 mice 包)。",
+    use:"按缺失率选择方法。"},
+  {cat:"D",title:"G*Power 样本量计算",en:"G*Power",
+    def:"免费软件事前算所需样本量。本研究：配对 t 检验、中等效应量 d=0.6、α=0.05、power=0.80→需 24 例(+20%脱落→30 例)。",
+    mem:"G*Power 算'要多少人'，d=0.6 中等差异，power 0.8 够用。"},
+  {cat:"D",title:"意向性分析 ITT",en:"Intention-To-Treat",
+    def:"按'最初打算治疗'的方式分析，不管患者后来有无完成，减少失访偏倚。",
+    use:"前瞻性部分用它。"},
+
+  // E 神经影像
+  {cat:"E",title:"MRI vs fMRI",en:"Structural vs functional MRI",
+    def:"MRI 看结构(解剖)；fMRI 看功能(大脑活动)，通过 BOLD 信号间接反映神经活动。",
+    use:"第三部分用 fMRI。"},
+  {cat:"E",title:"静息态 fMRI",en:"Resting-State fMRI",
+    def:"让受试者安静躺着什么都不做(保持清醒)时扫描。此时大脑低频自发波动反映脑区间功能连接。不需患者执行任务，适合临床研究。",
+    use:"第三部分主方法。术前 vs 术后 1 月各扫一次。",
+    mem:"躺着不动扫脑，看'默认'状态下的脑活动。"},
+  {cat:"E",title:"BOLD 信号",en:"Blood Oxygen Level Dependent",
+    def:"fMRI 核心信号。神经活动时局部脑血流增加，含氧/脱氧血红蛋白比例变化被 MRI 捕捉，间接反映哪里何时在活动。",
+    use:"所有 fMRI 指标的基础。"},
+  {cat:"E",title:"3D-T1 MPRAGE",en:"Magnetization Prepared Rapid Gradient Echo",
+    def:"高分辨率 3D T1 加权结构像序列。获清晰脑解剖图，配准/空间标准化时把每个人脑'对齐'到标准脑。",
+    use:"fMRI 预处理的结构基础。"},
+  {cat:"E",title:"ALFF 低频振幅 ⭐",en:"Amplitude of Low-Frequency Fluctuation",
+    def:"计算每体素 BOLD 信号在低频段(0.01–0.08 Hz)的波动幅度。ALFF 高=该脑区自发神经活动强。",
+    use:"比较术前 vs 术后、不同轨迹组 ALFF 差异，找'哪里活动变了'。",
+    mem:"ALFF 看'幅度(有多强)'。"},
+  {cat:"E",title:"ReHo 局部一致性 ⭐",en:"Regional Homogeneity",
+    def:"衡量一体素与周围相邻体素 BOLD 时间序列的同步性。ReHo 高=局部神经活动协调一致。",
+    use:"与 ALFF 互补。ALFF 看幅度，ReHo 看同步。",
+    mem:"ReHo 看'同步(协不协调)'。"},
+  {cat:"E",title:"功能连接 FC",en:"Functional Connectivity",
+    def:"两个脑区 BOLD 时间序列的相关性。相关高=两脑区'协同工作'。本研究用种子点法：选关键脑区(丘脑VPM、S1、ACC)作种子，看其与全脑连接强度变化。",
+    mem:"FC=两个脑区'连线强不强'。"},
+  {cat:"E",title:"ICA 独立成分分析 ⭐",en:"Independent Component Analysis",
+    def:"数据驱动方法，不预设脑区，从整个 fMRI 信号自动分解出若干独立'脑网络'(默认网络、注意网络等)。用 GIFT 工具箱。",
+    use:"与种子点法(假设驱动)互补印证。种子点法先选脑区，ICA 让数据自己说话。"},
+  {cat:"E",title:"DPARSF / SPM12 / GIFT",en:"fMRI toolboxes",
+    def:"DPARSF=基于 MATLAB 的 fMRI 预处理工具箱(中国严超赣团队)，自动完成时间层/头动校正、配准、平滑、滤波。SPM12=国际主流统计分析平台。GIFT=做 ICA 的工具箱。",
+    mem:"DPARSF 预处理→SPM12 统计→GIFT 做 ICA。"},
+  {cat:"E",title:"体素/簇水平 FWE 校正",en:"Voxel/cluster correction",
+    def:"体素=脑图最小三维单元。先体素水平设阈值(P<0.005)，再看连续体素形成的'簇'是否在簇水平 FWE 校正后仍显著(P<0.05)，既控假阳性又不漏真信号。",
+    use:"fMRI 统计的双重校正。"},
+  {cat:"E",title:"配对 t / 两样本 t 检验",en:"Paired/Two-sample t-test",
+    def:"配对 t=同一批人前后比较(术前vs术后1月)，消除个体差异更敏感，本研究 fMRI 主分析用它；两样本 t=两组不同的人比较，按轨迹分组后用。",
+    use:"fMRI 组间/前后比较。"},
+  {cat:"E",title:"Spearman 相关",en:"Spearman correlation",
+    def:"非参数相关(不要求数据正态)，用秩次计算。比 Pearson 稳健。",
+    use:"看'脑影像变化量'与'临床指标变化量'是否相关(如 ACC 活动降越多，麻木减越多?)。"},
+
+  // F 脑区解剖
+  {cat:"F",title:"丘脑 VPM（腹后内侧核）",en:"Ventral Posteromedial Nucleus",
+    def:"丘脑核团，面部感觉信息(含痛觉)的中继站。三叉神经→脑干→VPM→大脑皮层。",
+    use:"PBC 压三叉神经节，面部感觉传导第一站就是 VPM，是麻木机制最直接的脑区，故选作种子点。",
+    mem:"中继站：三叉→VPM→皮层。"},
+  {cat:"F",title:"S1 初级躯体感觉皮层",en:"Primary Somatosensory Cortex",
+    def:"中央后回，处理躯体感觉的位置、强度、性质(疼痛'感觉-分辨'维度)。面部代表区在 S1 外侧。",
+    use:"麻木主观感受最终在 S1 形成，故选作种子点。",
+    mem:"告诉你'脸麻在哪、麻多严重'。"},
+  {cat:"F",title:"ACC 前扣带回皮层",en:"Anterior Cingulate Cortex",
+    def:"扣带回前部，处理疼痛'情绪-动机'维度(疼痛带来的痛苦、不适)。即'疼得难受'的感觉。",
+    use:"麻木的'困扰感'(BNI Ⅳ–Ⅴ)与情绪脑区有关，ACC 是关键种子点。",
+    mem:"VPM→S1→ACC 三站：中继→感觉分辨→情绪困扰，对应麻木'传导→感知→难受'。"},
+  {cat:"F",title:"脑功能网络",en:"Brain Functional Networks",
+    def:"静息态下多个脑区自发协同活动形成稳定网络(默认模式网络DMN、突显网络、执行控制网络等)。fMRI(尤其ICA)研究这些网络变化。",
+    use:"观察 PBC 前后网络改变，理解麻木中枢机制。"},
+  {cat:"F",title:"脑功能可塑性",en:"Brain Plasticity",
+    def:"大脑在损伤或去传入(如三叉神经被压、感觉输入减少)后发生结构和功能重组适应。",
+    use:"核心问题：麻木的持续或恢复，对应大脑哪些可塑性变化？"},
+];
+
+/* ===================== RENDER GLOSSARY ===================== */
+const drawer = document.getElementById('conceptDrawer');
+const CAT_NAMES = {A:"疾病基础",B:"手术解剖",C:"临床量表",D:"统计方法",E:"神经影像",F:"脑区解剖"};
+
+function renderTerms(list){
+  drawer.innerHTML = list.map((t,idx)=>{
+    const id = `cat-${t.cat}-${idx}`;
+    return `<div class="concept-card" id="${id}" data-cat="${t.cat}" data-search="${(t.title+t.en+t.def+t.use+t.mem).toLowerCase()}">
+      <div class="cc-head" role="button" tabindex="0" aria-expanded="false">
+        <span class="cc-cat ${t.cat}">${t.cat}·${CAT_NAMES[t.cat]}</span>
+        <div class="cc-title-wrap">
+          <div class="cc-title">${t.title}</div>
+          <div class="cc-en">${t.en}</div>
+        </div>
+        <span class="cc-toggle" aria-hidden="true">+</span>
+      </div>
+      <div class="cc-body">
+        <p><span class="cc-label">是什么：</span>${t.def}</p>
+        <p><span class="cc-label">在本研究：</span>${t.use}</p>
+        ${t.mem?`<div class="cc-mnemonic">${t.mem}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  bindCardEvents();
+}
+function bindCardEvents(){
+  document.querySelectorAll('.cc-head').forEach(h=>{
+    const toggle=()=>{const c=h.parentElement;c.classList.toggle('open');h.setAttribute('aria-expanded',c.classList.contains('open'));};
+    h.addEventListener('click',toggle);
+    h.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+  });
+}
+renderTerms(TERMS);
+
+// category counts
+Object.keys(CAT_NAMES).concat('ALL').forEach(c=>{
+  const el=document.getElementById('cnt-'+c);
+  if(el) el.textContent = c==='ALL' ? TERMS.length : TERMS.filter(t=>t.cat===c).length;
+});
+
+// filter + search
+let activeCat='ALL';
+function applyFilter(){
+  const q=document.getElementById('glossSearch').value.trim().toLowerCase();
+  document.querySelectorAll('.concept-card').forEach(card=>{
+    const catOK = activeCat==='ALL' || card.dataset.cat===activeCat;
+    const searchOK = !q || card.dataset.search.includes(q);
+    card.classList.toggle('dimmed', !(catOK && searchOK));
+  });
+}
+document.querySelectorAll('.cat-filter').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.cat-filter').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeCat=btn.dataset.cat;
+    applyFilter();
+  });
+});
+document.getElementById('glossSearch').addEventListener('input',applyFilter);
+
+/* ===================== BNI TRY-IT ===================== */
+const BNI_GRADES = [
+  {g:'Ⅰ',color:'#10b981',desc:'无面部麻木。',flag:'',flagColor:''},
+  {g:'Ⅱ',color:'#84cc16',desc:'轻度面部麻木，但<strong>不困扰</strong>患者。',flag:'可接受',flagColor:'#10b981'},
+  {g:'Ⅲ',color:'#f59e0b',desc:'面部麻木，<strong>有些困扰</strong>患者。',flag:'本研究"重度麻木"起点 / 预测模型次要结局',flagColor:'#f59e0b'},
+  {g:'Ⅳ',color:'#f97316',desc:'面部麻木，<strong>相当困扰</strong>（4–5 级提示不满意）。',flag:'不满意',flagColor:'#ef4444'},
+  {g:'Ⅴ',color:'#ef4444',desc:'严重面部麻木，<strong>干扰日常活动</strong>。',flag:'不满意',flagColor:'#ef4444'},
+];
+const picker=document.getElementById('bniPicker');
+BNI_GRADES.forEach((gd,i)=>{
+  const b=document.createElement('button');
+  b.className='grade-btn';b.dataset.i=i;
+  b.innerHTML=`<span class="grade-badge" style="background:${gd.color}">${gd.g}</span><span>BNI ${gd.g} 级</span>`;
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.grade-btn').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel');
+    document.getElementById('roGrade').innerHTML=`BNI ${gd.g} 级`;
+    document.getElementById('roGrade').style.color=gd.color;
+    document.getElementById('roDesc').innerHTML=gd.desc;
+    const flag=document.getElementById('roFlag');
+    if(gd.flag){flag.style.display='inline-block';flag.textContent=gd.flag;flag.style.background=gd.flagColor+'22';flag.style.color=gd.flagColor;}
+    else{flag.style.display='none';}
+  });
+  picker.appendChild(b);
+});
+
+/* ===================== QUIZ ===================== */
+const QUIZ=[
+  {q:"本研究为什么说术后麻木是'双刃剑'？",o:["麻木越重镇痛越彻底，所以越重越好","适度麻木=痛觉被阻断=复发保护因素；过度/持续麻木则严重影响生活质量","麻木与疗效无关","麻木只发生在手术失败时"],a:1,
+   fb:"对。适度麻木提示痛觉传入被有效阻断（复发保护因素），但过度或持续麻木严重影响生活质量——这正是研究焦点。"},
+  {q:"三部分研究分别用什么设计、多少样本？",o:["都是 RCT，各 100 例","回顾性 200 / 回顾性 200 / 前瞻性 30","前瞻性 30 / 前瞻性 30 / 回顾性 200","全部回顾性 230 例"],a:1,
+   fb:"对。第一部分回顾性 200 例、第二部分用同 200 例建模、第三部分前瞻性自身对照 30 例。"},
+  {q:"BNI 疼痛分级的复发判定线划在哪一级？",o:["BNI ≥ Ⅱ 级","BNI ≥ Ⅲ 级","BNI ≥ Ⅳ 级","BNI = Ⅴ 级"],a:1,
+   fb:"对。术后 12 个月 BNI ≥ Ⅲ 级判定为疼痛复发；注意麻木分级的敏感性分析阈值也是 ≥ Ⅲ，但两者是不同量表。"},
+  {q:"EPV ≥ 10 是什么意思？为什么复发分析只能纳入 4–5 个变量？",o:["每个变量至少 10 个事件；复发事件 40–50 例所以 4–5 变量","每个患者至少 10 个变量","事件总数要 10 的倍数","变量数要≤10"],a:0,
+   fb:"对。EPV=每纳入 1 个预测变量需至少 10 个结局事件。复发 40–50 例÷10=4–5 个变量，这是防过拟合的安全线。"},
+  {q:"GBTM 比传统'看平均值'好在哪里？怎么选最优轨迹数？",o:["GBTM 算得更快的平均值","GBTM 能揭示隐藏亚组的恢复表型；按 BIC(越小越好)+AvePP(≥0.7)选模","GBTM 不需要选模型","按 P 值选轨迹数"],a:1,
+   fb:"对。GBTM 把个体差异归成几条代表性恢复轨迹，揭示'恢复表型'；用 BIC（小为优）和 AvePP（≥0.7）在 2/3/4 条间选最优。"},
+  {q:"LASSO 的 lambda.1se 和 lambda.min 有什么区别？为什么本研究选 1se？",o:["没有区别",".min 误差最小(变量多拟合好)；.1se 更简洁(变量少)。本研究选 1se 偏好泛化性好的简洁模型",".1se 误差更小","随便选哪个都行"],a:1,
+   fb:"对。lambda.1se 在最小误差一个标准误范围内取最大 λ，变量更少、模型更简洁、泛化更好。"},
+  {q:"列线图、AUC、校准曲线、DCA 分别评估模型的什么方面？",o:["都评估同一件事","列线图=图形化打分；AUC=区分度；校准=准确度；DCA=临床实用(净获益)","列线图=准确度；AUC=实用","DCA=区分度"],a:1,
+   fb:"对。列线图把模型图形化，AUC 看区分能力，校准曲线+H-L 看预测准不准，DCA 看临床净获益。"},
+  {q:"Bootstrap 重抽样为什么能'校正'AUC 的乐观偏差？",o:["它增加了样本量","有放回反复抽样模拟新数据，算 optimism-corrected AUC 估计模型在未见数据上的真实表现","它改变 AUC 公式","它只是重复计算"],a:1,
+   fb:"对。模型在训练数据上总偏乐观，Bootstrap 反复有放回抽样能模拟外部验证，给出更真实的 corrected AUC。"},
+  {q:"ALFF 和 ReHo 分别反映大脑活动的什么方面？",o:["都反映同一方面","ALFF=自发活动幅度(有多强)；ReHo=局部同步性(协不协调)","ALFF=同步；ReHo=幅度","两者都测结构"],a:1,
+   fb:"对。ALFF 量化低频波动幅度（活动强度），ReHo 衡量相邻体素时间序列同步性（协调度）。"},
+  {q:"为什么种子点选 VPM、S1、ACC？各对应麻木哪个维度？",o:["随机选的","VPM=面部感觉中继站；S1=感觉分辨(在哪/多严重)；ACC=情绪困扰(难受)","都管情绪","都管感觉"],a:1,
+   fb:"对。VPM→S1→ACC 三站对应麻木的'传导→感知→难受'，完整覆盖麻木从外周到主观困扰的全通路。"},
+  {q:"种子点法和 ICA 的根本区别是什么？",o:["没有区别","种子点法=假设驱动(先选脑区)；ICA=数据驱动(自动分解脑网络)","种子点法更新","ICA 是种子点的子集"],a:1,
+   fb:"对。种子点法需预先选定感兴趣区（假设驱动），ICA 不预设让数据自己分解出网络（数据驱动），两者互补印证。"},
+  {q:"（综合）若你是审稿人，最可能质疑这份方案的哪一点？",o:["方案太简单","无独立外部验证队列（第二部分仅内部验证），这是方案自认的限制","样本太大","方法太多"],a:1,
+   fb:"对。无外部验证是方案明确承认的限制；此外对照组表述、参考文献数量(仅 4 篇)也可能被追问。"},
+];
+const qc=document.getElementById('quizContainer');
+const answered={};
+QUIZ.forEach((item,i)=>{
+  const card=document.createElement('div');card.className='quiz-card';
+  let opts=item.o.map((o,j)=>`<button class="quiz-opt" data-q="${i}" data-o="${j}"><span class="qo-mark">${String.fromCharCode(65+j)}</span><span>${o}</span></button>`).join('');
+  card.innerHTML=`<span class="quiz-num">第 ${i+1} 题</span>
+    <div class="quiz-q">${item.q}</div>
+    <div class="quiz-opts">${opts}</div>
+    <div class="quiz-feedback" id="fb-${i}"></div>`;
+  qc.appendChild(card);
+});
+document.querySelectorAll('.quiz-opt').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const q=+btn.dataset.q, o=+btn.dataset.o;
+    if(answered[q]) return;
+    answered[q]=o;
+    const correct=QUIZ[q].a;
+    document.querySelectorAll(`.quiz-opt[data-q="${q}"]`).forEach(b=>{
+      b.classList.add('locked');
+      const bo=+b.dataset.o;
+      if(bo===correct) b.classList.add('correct');
+      else if(bo===o) b.classList.add('wrong');
+    });
+    const fb=document.getElementById('fb-'+q);
+    fb.classList.add('show');
+    if(o===correct){fb.classList.add('good');fb.textContent='✓ '+QUIZ[q].fb;}
+    else{fb.classList.add('bad');fb.textContent='✗ 再想想。'+QUIZ[q].fb;}
+    updateScore();
+  });
+});
+function updateScore(){
+  const done=Object.keys(answered).length;
+  if(done>0){
+    const score=Object.entries(answered).filter(([k,v])=>v===QUIZ[k].a).length;
+    const box=document.getElementById('quizScore');
+    box.style.display='block';
+    document.getElementById('scoreNum').textContent=score;
+    const pct=score/QUIZ.length;
+    let desc;
+    if(pct>=0.75) desc=`太棒了！已答 ${done}/12 题，答对 ${score} 题。达到'读懂'标准（≥9 题）。`;
+    else if(done<QUIZ.length) desc=`进行中：已答 ${done}/${QUIZ.length}，答对 ${score}。继续！`;
+    else desc=`完成！${score}/${QUIZ.length}。${pct>=0.75?'达标！':'未达 9 题，建议回看 D/E 类术语。'}`;
+    document.getElementById('scoreDesc').textContent=desc;
+  }
+}
+
+/* ===================== STEP RAIL ACTIVE STATE ===================== */
+const railLinks=document.querySelectorAll('#stepRail a');
+const sections=[...railLinks].map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+function updateActive(){
+  let cur=sections[0];
+  const y=window.scrollY+100;
+  sections.forEach(s=>{if(s && s.offsetTop<=y) cur=s;});
+  railLinks.forEach(a=>{
+    const active=a.getAttribute('href')==='#'+(cur&&cur.id);
+    a.classList.toggle('active',active);
+  });
+}
+window.addEventListener('scroll',updateActive,{passive:true});
+
+/* anchor offset for category links */
+document.querySelectorAll('.lesson-rail a[href^="#cat-"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    // these point to category filter, not real elements; trigger filter instead
+    e.preventDefault();
+    const cat=a.getAttribute('href').replace('#cat-','');
+    const btn=document.querySelector(`.cat-filter[data-cat="${cat}"]`);
+    if(btn){btn.click();document.getElementById('sec-glossary').scrollIntoView({behavior:'smooth'});}
+    closeRail();
+  });
+});
+
+/* ===================== MOBILE RAIL TOGGLE ===================== */
+const rail=document.getElementById('lessonRail');
+const backdrop=document.getElementById('railBackdrop');
+function openRail(){rail.classList.add('open');backdrop.classList.add('show');}
+function closeRail(){rail.classList.remove('open');backdrop.classList.remove('show');}
+document.getElementById('railToggle').addEventListener('click',()=>{rail.classList.contains('open')?closeRail():openRail();});
+backdrop.addEventListener('click',closeRail);
+document.querySelectorAll('.step-rail a[href^="#sec-"], .step-rail a[href^="#cat-"]').forEach(a=>{
+  a.addEventListener('click',()=>{if(window.innerWidth<=900){/* keep open for cat filter handled above */ if(a.getAttribute('href').startsWith('#sec-')) closeRail();}});
+});
+
+updateActive();
+</script>
+</body>
+</html>
