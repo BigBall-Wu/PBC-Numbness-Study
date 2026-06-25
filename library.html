@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-ha-style="document">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文献库 · PBC 术后麻木机制研究</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teaching-accent:#0f766e;--teaching-accent-soft:#ccfbf1;--teaching-accent-deep:#134e4a;
+  --primary:#a03b00;
+  --bg:#fff8f6;--surface:#fff;--surface-low:#fbf2ef;--surface-container:#f5ece9;
+  --fg-1:#1e1b19;--fg-2:#594138;--fg-muted:#8d7166;
+  --border:rgba(0,0,0,.06);--border-strong:rgba(0,0,0,.12);
+  --font-headline:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;
+  --font-body:'Plus Jakarta Sans',ui-sans-serif,system-ui,sans-serif;
+  --radius-md:12px;--radius-lg:16px;--radius-pill:9999px;
+  --shadow-md:0 4px 12px rgba(30,27,25,.08);--shadow-lg:0 8px 24px rgba(30,27,25,.12);
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#060B18;--surface:#0B1426;--surface-low:#101D35;--surface-container:#162544;
+    --fg-1:#F8FAFC;--fg-2:#CBD5E1;--fg-muted:#64748B;
+    --border:rgba(255,255,255,.08);--border-strong:rgba(255,255,255,.14);
+    --teaching-accent:#2dd4bf;--teaching-accent-soft:#134e4a;--teaching-accent-deep:#5eead4;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--fg-1);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+::selection{background:var(--teaching-accent-soft)}
+:focus-visible{outline:2px solid var(--teaching-accent);outline-offset:2px;border-radius:6px}
+
+/* 顶部导航 */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,248,246,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:14px}
+@media(prefers-color-scheme:dark){.topbar{background:rgba(11,20,38,.92)}}
+.topbar-logo{width:36px;height:36px;border-radius:10px;flex-shrink:0;display:grid;place-items:center;background:linear-gradient(135deg,var(--teaching-accent),var(--teaching-accent-deep));color:#fff;font-family:var(--font-headline);font-weight:700;font-size:15px}
+.topbar-title{font-family:var(--font-headline);font-weight:600;font-size:15px;line-height:1.2}
+.topbar-sub{font-size:11px;color:var(--fg-muted);margin-top:1px}
+.topbar-nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.topbar-nav a{padding:7px 12px;border-radius:var(--radius-pill);text-decoration:none;font-size:13px;color:var(--fg-2);font-weight:500;transition:all .15s;border:1px solid transparent}
+.topbar-nav a:hover{background:var(--surface-container);color:var(--fg-1)}
+.topbar-nav a.active{background:var(--teaching-accent-soft);color:var(--teaching-accent-deep);border-color:var(--teaching-accent)}
+
+.wrap{max-width:900px;margin:0 auto;padding:0 20px}
+
+/* 页头 */
+.page-head{padding:40px 0 24px}
+.page-head h1{font-family:var(--font-headline);font-weight:700;font-size:30px;letter-spacing:-.01em;margin-bottom:8px}
+.page-head p{color:var(--fg-2);font-size:15px}
+
+/* 搜索栏 */
+.search-box{position:sticky;top:69px;z-index:40;padding:12px 0;background:var(--bg);margin-bottom:8px}
+.search-wrap{position:relative}
+.search-input{
+  width:100%;padding:13px 16px 13px 44px;border:1px solid var(--border-strong);border-radius:var(--radius-pill);
+  background:var(--surface);color:var(--fg-1);font-family:inherit;font-size:15px;transition:all .15s;
+}
+.search-input:focus{outline:none;border-color:var(--teaching-accent);box-shadow:0 0 0 3px var(--teaching-accent-soft)}
+.search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--fg-muted);font-size:16px;pointer-events:none}
+
+/* 筛选条 */
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;padding:8px 0 16px}
+.filter-chip{
+  padding:7px 13px;border-radius:var(--radius-pill);background:var(--surface);border:1px solid var(--border-strong);
+  font-size:12.5px;font-weight:500;color:var(--fg-2);cursor:pointer;transition:all .15s;font-family:inherit;
+}
+.filter-chip:hover{border-color:var(--teaching-accent)}
+.filter-chip.active{background:var(--teaching-accent);color:#fff;border-color:var(--teaching-accent)}
+
+/* 统计 */
+.result-count{font-size:13px;color:var(--fg-muted);padding:0 0 12px}
+
+/* 文献卡片 */
+.lib-list{display:flex;flex-direction:column;gap:12px;padding-bottom:40px}
+.paper-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;
+  transition:all .15s;border-left:3px solid var(--teaching-accent);
+}
+.paper-card:hover{box-shadow:var(--shadow-md);transform:translateX(2px)}
+.paper-card.is-star{border-left-color:var(--primary)}
+.paper-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.paper-num{
+  flex-shrink:0;width:26px;height:26px;border-radius:6px;background:var(--teaching-accent-soft);
+  color:var(--teaching-accent-deep);font-family:var(--font-headline);font-weight:700;font-size:13px;
+  text-align:center;line-height:26px;
+}
+.paper-card.is-star .paper-num{background:#fef3c7;color:#92400e}
+.paper-title{font-weight:600;font-size:14.5px;line-height:1.45;color:var(--fg-1)}
+.paper-meta{font-size:12.5px;color:var(--fg-muted);margin:6px 0 8px;line-height:1.5}
+.paper-meta b{color:var(--fg-2);font-weight:600}
+.paper-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.paper-tag{font-size:10.5px;padding:3px 8px;border-radius:var(--radius-pill);background:var(--surface-container);color:var(--fg-2);font-weight:500}
+.paper-tag.cat-A{background:#fef3c7;color:#92400e}
+.paper-tag.cat-B{background:#dbeafe;color:#1e40af}
+.paper-tag.cat-C{background:#f3e8ff;color:#6b21a8}
+.paper-tag.cat-D{background:#dcfce7;color:#166534}
+.paper-tag.cat-E{background:#fce7f3;color:#9d174d}
+.paper-tag.star{background:#fef3c7;color:#92400e;font-weight:600}
+.paper-link{display:inline-block;margin-top:8px;font-size:12.5px;color:var(--teaching-accent-deep);text-decoration:none;font-weight:500}
+.paper-link:hover{text-decoration:underline}
+
+/* 空状态 */
+.empty-state{text-align:center;padding:60px 20px;color:var(--fg-muted)}
+.empty-state .emoji{font-size:40px;margin-bottom:12px;display:block}
+
+/* 底部 */
+footer{padding:32px 0 48px;text-align:center;border-top:1px solid var(--border)}
+footer p{font-size:13px;color:var(--fg-muted)}
+footer a{color:var(--teaching-accent-deep);text-decoration:none}
+
+/* 移动端 */
+@media(max-width:680px){
+  body{font-size:15px}
+  .topbar{padding:12px 16px;flex-wrap:wrap}
+  .topbar-nav{order:3;width:100%;justify-content:center;margin:8px 0 0}
+  .topbar-nav a{font-size:12px;padding:6px 10px}
+  .wrap{padding:0 16px}
+  .page-head{padding:28px 0 16px}
+  .page-head h1{font-size:24px}
+  .search-box{top:64px}
+  .search-input{padding:14px 16px 14px 44px;font-size:16px}
+  .paper-card{padding:16px}
+  .paper-title{font-size:14px}
+  .filter-chip{padding:8px 12px;font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-logo">PBC</div>
+  <div>
+    <div class="topbar-title">PBC 术后麻木机制研究</div>
+    <div class="topbar-sub">文献库 · 50 篇</div>
+  </div>
+  <nav class="topbar-nav">
+    <a href="index.html">首页</a>
+    <a href="project.html">项目简介</a>
+    <a href="handbook.html">学习手册</a>
+    <a href="library.html" class="active">文献库</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="page-head">
+    <h1>📚 文献库</h1>
+    <p>50 篇最相关文献，覆盖 PBC 麻木、复发、Meckel 腔、预测模型、fMRI、GBTM、中枢机制等主题。可搜索、可按类别筛选。</p>
+  </div>
+
+  <!-- 搜索 -->
+  <div class="search-box">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索标题、作者、期刊、关键词…" autocomplete="off">
+    </div>
+  </div>
+
+  <!-- 分类筛选 -->
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-chip active" data-cat="ALL">全部 50</button>
+    <button class="filter-chip" data-cat="A">A·PBC麻木/危险因素</button>
+    <button class="filter-chip" data-cat="B">B·复发/生存</button>
+    <button class="filter-chip" data-cat="C">C·Meckel腔/解剖</button>
+    <button class="filter-chip" data-cat="D">D·预测模型</button>
+    <button class="filter-chip" data-cat="E">E·fMRI</button>
+    <button class="filter-chip" data-cat="F">F·中枢机制</button>
+    <button class="filter-chip" data-cat="G">G·GBTM方法</button>
+    <button class="filter-chip" data-cat="H">H·量表方法</button>
+  </div>
+
+  <div class="result-count" id="resultCount">显示全部 50 篇</div>
+
+  <div class="lib-list" id="libList"></div>
+
+  <div class="empty-state" id="emptyState" style="display:none">
+    <span class="emoji">🔍</span>
+    <p>没有匹配的文献，换个关键词试试</p>
+  </div>
+
+  <footer>
+    <p>文献检索日期：2026-06-24 · 来源：PubMed / Web of Science / ScienceDirect 等<br>
+    <a href="index.html">← 返回首页</a></p>
+  </footer>
+</div>
+
+<script>
+// 50篇文献数据
+const PAPERS = [
+  // A. PBC术后麻木/感觉减退与危险因素 (1-6)
+  {n:1,cat:'A',star:true,title:'Proximal trigeminal nerve atrophy is associated with favourable outcomes and persistent facial numbness following percutaneous balloon compression for primary trigeminal neuralgia',meta:'Li S, Liao C, Cheng G, et al. · <b>Acta Neurochir (Wien)</b>, 2023, 165(12): 3121-3130',note:'⭐方案直接引用[3]。三叉神经近端萎缩↔持续面部麻木（双刃剑解剖基础）',doi:'10.1007/s00701-023-05849-3',url:'https://pubmed.ncbi.nlm.nih.gov/37953302/'},
+  {n:2,cat:'A',star:true,title:'Balloon pressure and clinical effectiveness of percutaneous microballoon compression in the treatment of primary trigeminal neuralgia',meta:'Peng Y, Zou C, Li Y, et al. · <b>Pain Physician</b>, 2024, 27(4): E385-E393',note:'⭐方案直接引用[4]。球囊压力-感觉并发症剂量反应关系',url:'https://www.painphysicianjournal.com/current/pdf?article=Nzc4Mw%253D%253D'},
+  {n:3,cat:'A',title:'A randomized controlled trial comparing the effect of two-time durations of compression in percutaneous balloon compression',meta:'<b>Pain Physician</b>, 2023',note:'压迫时间越长→麻木越多（最高证据等级 RCT）',url:'https://www.painphysicianjournal.com/current/pdf?article=Nzc4Mw%253D%253D'},
+  {n:4,cat:'A',star:true,title:'Multivariate models to predict pain recurrence and sensitive complications after percutaneous balloon compression in trigeminal neuralgia',meta:'Delev D, et al. · <b>J Neurosurg</b>, 2022, 137(5): 1396-1404',note:'复发+感觉并发症双结局建模，本研究方法学最贴近参照',url:'https://thejns.org/view/journals/j-neurosurg/137/5/article-p1396.xml'},
+  {n:5,cat:'A',title:'Negative emotions and recovery after percutaneous balloon compression（抑郁/焦虑影响恢复）',meta:'<b>PMC</b>, 2025',note:'术前抑郁/焦虑延缓恢复，PASS-20 量表理论依据',url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC12151621/'},
+  {n:6,cat:'A',title:'Analysis of 37 cases of percutaneous balloon compression for trigeminal neuralgia',meta:'<b>Front Surg</b>, 2025',note:'近期病例系列，100% 即刻镇痛+面部麻木数据',url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC12443851/'},
+
+  // B. PBC术后疼痛复发/生存分析/长期队列 (7-12)
+  {n:7,cat:'B',title:'Analysis of risk prediction model for recurrence of trigeminal neuralgia after percutaneous balloon compression',meta:'<b>Front Neurosci</b>, 2025',note:'复发预测模型，本研究第二部分对照',url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC12779613/'},
+  {n:8,cat:'B',title:'Long-term follow-up of patients treated with percutaneous balloon compression',meta:'<b>Surg Neurol Int</b>, 2012',note:'经典长期随访，复发时间分布数据',url:'https://pubmed.ncbi.nlm.nih.gov/22251508/'},
+  {n:9,cat:'B',title:'Long-term recurrence-free survival and complications of PBC vs radiofrequency thermocoagulation',meta:'<b>Scand J Pain</b>, 2024',note:'Kaplan-Meier 复发生存分析方法学参照',url:'https://onlinelibrary.wiley.com/doi/abs/10.1111/papr.13114'},
+  {n:10,cat:'B',title:'Comparison of MVD and PBC long-term prognosis',meta:'<b>Front Neurol</b>, 2024',note:'MVD vs PBC 长期疗效对比',url:'https://www.frontiersin.org/journals/neurology/articles/10.3389/fneur.2024.1406602/full'},
+  {n:11,cat:'B',title:'Factors that may delay disappearance of trigeminal neuralgia after PBC',meta:'<b>Neurol Neurochir Pol</b>, 2023',note:'延缓疼痛消失因素，可迁移至"延缓麻木消失"',url:'https://journals.viamedica.pl/neurologia_neurochirurgia_polska/article/view/86502'},
+  {n:12,cat:'B',title:'Factors that may affect recurrence of TN after percutaneous balloon compression',meta:'<b>World Neurosurg</b>, 2022',note:'即刻 vs 延迟疼痛消失影响复发耐久性',url:'https://www.sciencedirect.com/science/article/abs/pii/S0967586822001217'},
+
+  // C. Meckel腔/三叉神经影像解剖 (13-17)
+  {n:13,cat:'C',star:true,title:'Flatness of the Meckel cave may cause primary trigeminal neuralgia',meta:'<b>J Headache Pain</b>, 2021, 22(1): 58',note:'⭐方案"Meckel腔扁平度"变量(meckel_flat)的直接文献来源',url:'https://link.springer.com/article/10.1186/s10194-021-01317-4'},
+  {n:14,cat:'C',title:'Atrophic changes in the trigeminal nerves of patients with trigeminal neuralgia',meta:'<b>J Neurosurg</b>, 2014, 120(6): 1484-1491',note:'三叉神经萎缩体积分割测量方法学',url:'https://thejns.org/view/journals/j-neurosurg/120/6/article-p1484.xml'},
+  {n:15,cat:'C',title:'The transformation of the balloon shape in percutaneous balloon compression',meta:'<b>PMC</b>, 2021',note:'梨形=金标准；cucumber→round→pear→dumbbell 进展',url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC8684418/'},
+  {n:16,cat:'C',title:'Research on the relationship between Meckel\'s cavity shape and PBC outcomes',meta:'<b>World Neurosurg</b>, 2022',note:'Meckel 腔解剖影响球囊构型与结局',url:'https://www.sciencedirect.com/science/article/abs/pii/S1878875022014395'},
+  {n:17,cat:'C',title:'PBC for trigeminal neuralgia: predictive power of balloon shape',meta:'<b>J Neurosurg</b>, 2023, 138(2): 582',note:'dumbbell/pear/oval 形态对结局的预测价值',url:'https://thejns.org/view/journals/j-neurosurg/138/2/article-p582.xml'},
+
+  // D. PBC预测模型/列线图/机器学习 (18-24)
+  {n:18,cat:'D',title:'Prognostic effect of trigeminal neuralgia treated with PBC: a machine learning-based clinical imaging nomogram',meta:'<b>Pain Physician</b>, 2024',note:'ML+列线图预测复发，本研究方法对照',url:'https://www.painphysicianjournal.com/current/pdf?article=Nzk0Ng%253D%253D'},
+  {n:19,cat:'D',title:'Prognostic nomogram for percutaneous balloon compression in the treatment of trigeminal neuralgia',meta:'<b>J Neurosurg</b>, 2021',note:'早期术前预后列线图',url:'https://pubmed.ncbi.nlm.nih.gov/34027573/'},
+  {n:20,cat:'D',title:'Nomogram model for predicting the risk of recurrence after RFT',meta:'<b>Pain Physician</b>, 2023',note:'LASSO+多因素Logistic+列线图方法学范本',url:'https://pubmed.ncbi.nlm.nih.gov/37774196/'},
+  {n:21,cat:'D',title:'A nomogram based on radiomics and clinical information to predict prognosis in PBC',meta:'<b>Neurosurg Rev</b>, 2024',note:'影像组学+临床融合列线图',url:'https://link.springer.com/article/10.1007/s10143-024-02339-7'},
+  {n:22,cat:'D',title:'Machine learning to predict radiomics models of classical TN response to PBC',meta:'<b>Front Neurol</b>, 2024',note:'LASSO 影像组学预测 PBC 疗效',url:'https://www.frontiersin.org/journals/neurology/articles/10.3389/fneur.2024.1443124/full'},
+  {n:23,cat:'D',title:'Predictive model development for postoperative complications in PBC',meta:'<b>World Neurosurg</b>, 2026',note:'LASSO 预测 164 例 PBC 并发症',url:'https://www.sciencedirect.com/science/article/pii/S1878875026000124'},
+  {n:24,cat:'D',title:'Random forest model for trigeminal neuralgia recurrence after PBC',meta:'<b>Semantic Scholar</b>, 2024',note:'Logistic vs RF vs XGBoost 比较',url:'https://pdfs.semanticscholar.org/4f33/e48b7b0264ca2f96cbdb1f4315197dc4c52e.pdf'},
+
+  // E. 三叉神经痛fMRI (25-33)
+  {n:25,cat:'E',star:true,title:'Abnormal regional brain functional activity and brain network connectivity in trigeminal neuralgia: an integrated rs-fMRI meta-analysis',meta:'<b>J Pain Res</b>, 2024',note:'⭐第三部分核心。本研究 fMRI 种子点(ACC/S1/DMN)循证依据',url:'https://www.tandfonline.com/doi/full/10.2147/JPR.S573011'},
+  {n:26,cat:'E',star:true,title:'Altered spontaneous brain activity in patients with idiopathic trigeminal neuralgia: a resting-state functional MRI study',meta:'<b>Front Neurol</b>, 2018, 9: 109',note:'⭐ALFF/ReHo 方法学奠基性文献',url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC5999362/'},
+  {n:27,cat:'E',star:true,title:'Structural brain alterations and changes in resting-state functional connectivity in trigeminal neuralgia',meta:'<b>J Headache Pain</b>, 2025',note:'丘脑/S1/岛叶/ACC 核心区域确认',url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC11954123/'},
+  {n:28,cat:'E',star:true,title:'The alteration of the sensorimotor network in trigeminal neuralgia',meta:'<b>Front Physiol</b>, 2025',note:'⭐MVD 前后 ICA 功能连接变化，本研究"术前→术后"设计最直接范本',url:'https://www.frontiersin.org/journals/physiology/articles/10.3389/fphys.2025.1633028/pdf'},
+  {n:29,cat:'E',title:'Altered brain network centrality in patients with trigeminal neuralgia: a resting-state fMRI study',meta:'<b>Acta Radiol</b>, 2020, 61(1): 67-75',note:'网络中心性（度中心性）方法学',url:'https://journals.sagepub.com/doi/10.1177/0284185119847678'},
+  {n:30,cat:'E',title:'Spatial-temporal signature of resting-state BOLD signals in classic trigeminal neuralgia',meta:'<b>PMC</b>, 2017',note:'默认模式网络(DMN)参与证据',url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC5722017/'},
+  {n:31,cat:'E',title:'Aberrant static and dynamic functional connectivity of the insular cortex in trigeminal neuralgia',meta:'<b>Sci Rep</b>, 2025',note:'ALFF/ReHo/DC 静动态分析，方法扩展',url:'https://www.nature.com/articles/s41598-025-07468-7'},
+  {n:32,cat:'E',title:'Alterations of dynamic regional homogeneity in trigeminal neuralgia: a resting-state fMRI study',meta:'<b>2024</b>',note:'动态 ReHo，第三部分方法扩展',url:'https://iasp-pain.org/publications/pain-research-forum/papers-of-the-week/paper/127159/'},
+  {n:33,cat:'E',title:'Resting-state fMRI and machine learning: classical vs. idiopathic trigeminal neuralgia',meta:'<b>J Neurosurg</b>, 2025, 143(1): 74',note:'ML+fMRI 鉴别 TN 亚型',url:'https://thejns.org/view/journals/journals/j-neurosurg/143/1/article-p74.xml'},
+
+  // F. 神经病理性疼痛中枢机制 (34-38)
+  {n:34,cat:'F',title:'Pathological mechanisms and therapeutic targets for trigeminal neuralgia',meta:'<b>PMC</b>, 2019',note:'外周敏化→中枢可塑性改变机制综述',url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC6789505/'},
+  {n:35,cat:'F',title:'The molecular basis and pathophysiology of trigeminal neuralgia',meta:'<b>Int J Mol Sci</b>, 2022, 23(7): 3604',note:'中枢敏化（钠离子通道 Nav1.3/1.7）机制',url:'https://www.mdpi.com/1422-0067/23/7/3604'},
+  {n:36,cat:'F',title:'Atypical trigeminal neuralgia: a consequence of central sensitization?',meta:'<b>Curr Pain Headache Rep</b>, 2010',note:'中枢敏化解释不典型 TN 症状',url:'https://pubmed.ncbi.nlm.nih.gov/20172658/'},
+  {n:37,cat:'F',title:'Glial involvement in trigeminal central sensitization',meta:'<b>Acta Pharmacol Sin</b>, 2008',note:'胶质细胞-促炎因子-中枢敏化机制',url:'https://www.nature.com/articles/aps200877'},
+  {n:38,cat:'F',title:'Peripheral and central mechanisms of trigeminal neuropathic pain',meta:'<b>J Pharmacol Sci</b>, 2011',note:'三叉神经节神经元兴奋性改变机制',url:'https://www.sciencedirect.com/science/article/pii/S1349007911800253'},
+
+  // G. GBTM/轨迹建模方法学+应用 (39-44)
+  {n:39,cat:'G',star:true,title:'Recent advances in group-based trajectory modeling for clinical research',meta:'<b>Annu Rev Clin Psychol</b>, 2024',note:'⭐GBTM 最新方法学综述，本研究第一部分方法指南',url:'https://pubmed.ncbi.nlm.nih.gov/38382118/'},
+  {n:40,cat:'G',star:true,title:'An introduction to latent class growth analysis and growth mixture modeling',meta:'Jung T, Wickrama KAS · <b>Soc Personal Psychol Compass</b>, 2008',note:'⭐LCGA vs GMM 方法学经典，模型选择决策规则',url:'https://www.statmodel.com/download/JungWickramaLCGALGMM.pdf'},
+  {n:41,cat:'G',star:true,title:'Estimation of extended mixed models using latent classes and latent processes: the R package lcmm',meta:'Proust-Lima C, et al. · <b>J Stat Soft</b>, 2017, 78(2)',note:'⭐lcmm 包官方方法学论文，本研究 GBTM 实施工具',url:'https://www.jstatsoft.org/article/download/v078i02/1115'},
+  {n:42,cat:'G',title:'Trajectories of pain after cardiac surgery',meta:'<b>Circ Cardiovasc Qual Outcomes</b>, 2021',note:'GBTM 在术后疼痛纵向轨迹的应用示范',url:'https://www.ahajournals.org/doi/10.1161/CIRCOUTCOMES.120.007781'},
+  {n:43,cat:'G',title:'Group-based trajectory analysis of acute pain after spine surgery',meta:'<b>Front Med</b>, 2022',note:'外科术后疼痛 GBTM 应用范本',url:'https://www.frontiersin.org/journals/medicine/articles/10.3389/fmed.2022.907126/full'},
+  {n:44,cat:'G',title:'Long-term trajectories of chronic musculoskeletal pain: a 21-year prospective cohort',meta:'<b>Pain</b>, 2021, 162(5): 1323-1332',note:'LCGA 长期纵向轨迹建模母本',url:'https://journals.lww.com/pain/fulltext/2021/05000/long_term_trajectories_of_chronic_musculoskeletal.22.aspx'},
+
+  // H. 疼痛评估量表与方法学 (45-50)
+  {n:45,cat:'H',star:true,title:'Patient-reported outcome measures in trigeminal neuralgia',meta:'<b>Eur J Pain</b>, 2021',note:'⭐TN PROMs（含 BNI）系统综述，本研究量表选择依据',url:'https://onlinelibrary.wiley.com/doi/full/10.1002/ejp.1779'},
+  {n:46,cat:'H',title:'Different scale, different pain? Discordant pain measurements',meta:'<b>World Neurosurg</b>, 2024',note:'VAS/BPI-Facial/BNI 30-35% 不一致，量表选择注意',url:'https://www.sciencedirect.com/science/article/pii/S1878875024019259'},
+  {n:47,cat:'H',title:'The focus and new progress of percutaneous balloon compression for trigeminal neuralgia',meta:'<b>J Pain Res</b>, 2024',note:'PBC 综述，背景写作依据',url:'https://www.tandfonline.com/doi/full/10.2147/JPR.S374433'},
+  {n:48,cat:'H',title:'Percutaneous balloon compression for trigeminal neuralgia: efficacy analysis',meta:'<b>Neurosurg Focus</b>, 2005, 18(5): e11',note:'经典 PBC 临床研究',url:'https://thejns.org/focus/view/journals/neurosurg-focus/18/5/foc.2005.18.5.11.pdf'},
+  {n:49,cat:'H',title:'Percutaneous balloon compression for trigeminal neuralgia（技术介绍）',meta:'<b>Thieme</b>, 2013',note:'PBC 技术规范，球囊充盈 0.75–1.0mL',url:'https://www.thieme-connect.de/products/ebooks/pdf/10.1055/b-0034-89953.pdf'},
+  {n:50,cat:'H',title:'Abnormal regional homogeneity and amplitude of low frequency fluctuations in chronic pain',meta:'<b>Front Neurosci</b>, 2022',note:'ReHo/ALFF 在慢性疼痛的脑区定位，方法学迁移参考',url:'https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2022.1064813/full'}
+];
+
+const CAT_NAMES = {A:'PBC麻木/危险因素',B:'复发/生存',C:'Meckel腔/解剖',D:'预测模型',E:'fMRI',F:'中枢机制',G:'GBTM方法',H:'量表方法'};
+
+const list = document.getElementById('libList');
+const searchInput = document.getElementById('searchInput');
+const filterBar = document.getElementById('filterBar');
+const resultCount = document.getElementById('resultCount');
+const emptyState = document.getElementById('emptyState');
+
+let currentCat = 'ALL';
+let currentQuery = '';
+
+function render(){
+  const q = currentQuery.trim().toLowerCase();
+  const filtered = PAPERS.filter(p => {
+    const catOk = currentCat === 'ALL' || p.cat === currentCat;
+    if(!catOk) return false;
+    if(!q) return true;
+    const hay = (p.title + ' ' + p.meta + ' ' + p.note).toLowerCase();
+    return hay.includes(q);
+  });
+
+  list.innerHTML = filtered.map(p => `
+    <article class="paper-card ${p.star?'is-star':''}">
+      <div class="paper-head">
+        <div class="paper-num">${p.n}</div>
+        <div class="paper-title">${p.title}</div>
+      </div>
+      <div class="paper-meta">${p.meta}</div>
+      <div style="font-size:13px;color:var(--fg-2);line-height:1.55">${p.note}</div>
+      <div class="paper-tags">
+        <span class="paper-tag cat-${p.cat}">${p.cat}·${CAT_NAMES[p.cat]}</span>
+        ${p.star?'<span class="paper-tag star">⭐ 核心文献</span>':''}
+        ${p.doi?`<span class="paper-tag">DOI: ${p.doi}</span>`:''}
+      </div>
+      <a class="paper-link" href="${p.url}" target="_blank" rel="noopener">查看原文 ↗</a>
+    </article>
+  `).join('');
+
+  resultCount.textContent = currentCat === 'ALL'
+    ? (q ? `匹配 ${filtered.length} / 50 篇` : `显示全部 ${filtered.length} 篇`)
+    : (q ? `在 ${CAT_NAMES[currentCat]} 中匹配 ${filtered.length} 篇` : `${CAT_NAMES[currentCat]} · ${filtered.length} 篇`);
+
+  emptyState.style.display = filtered.length === 0 ? 'block' : 'none';
+  list.style.display = filtered.length === 0 ? 'none' : 'flex';
+}
+
+searchInput.addEventListener('input', e => { currentQuery = e.target.value; render(); });
+filterBar.addEventListener('click', e => {
+  const btn = e.target.closest('.filter-chip');
+  if(!btn) return;
+  filterBar.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  currentCat = btn.dataset.cat;
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
