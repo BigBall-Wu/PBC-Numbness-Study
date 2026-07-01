@@ -420,14 +420,14 @@ body{
           <span class="objective-badge">学习目标</span>
           <p class="objective-text">
             用约 <b>6–8 小时</b>，从零读懂《基于临床-影像-fMRI 的经皮球囊压迫术治疗三叉神经痛术后麻木机制研究》方案——
-            理解 <b>三叉神经痛 → PBC 手术 → 术后麻木 → 预测与机制</b> 的完整逻辑，掌握其中 <b>50+ 专业术语</b>，
+            理解 <b>三叉神经痛 → PBC 手术 → 术后麻木 → 轨迹预测与中枢机制</b> 的完整逻辑，掌握其中 <b>50+ 专业术语</b>，
             并能回答方法学与神经影像层面的关键问题。
           </p>
         </div>
 
         <div class="callout tip">
           <b>这很重要，因为</b> 本研究方案的核心创新是把"临床现象 → 数学预测 → 神经机制"串成一条完整证据链：
-          用 200 例数据首次描绘麻木的"动态恢复轨迹"，据此建预测模型，再用 30 例 fMRI 探索大脑机制。记住这条主线，所有细节都是围绕它展开。
+          用 200 例数据首次描绘麻木的"动态恢复轨迹"，据此建立持续重度麻木轨迹预测模型，再用 30 例 fMRI 探索术前脑基线能否预测最终轨迹归属。记住这条主线，所有细节都是围绕它展开。
         </div>
       </section>
 
@@ -452,7 +452,7 @@ body{
         <h3>三条阅读策略</h3>
         <ul>
           <li><strong>先建立"骨架"，再填"血肉"</strong>：方案骨架是 三叉神经痛 → PBC → 术后麻木 → 为什么？能预测吗？怎么恢复？</li>
-          <li><strong>方案分三部分 = 三个子研究</strong>：第一部分<strong>找规律</strong>（回顾，200 例）、第二部分<strong>做预测</strong>（建模）、第三部分<strong>找机制</strong>（前瞻，30 例 fMRI）。</li>
+          <li><strong>方案分三部分 = 三个子研究</strong>：第一部分<strong>找规律</strong>（回顾，200 例）、第二部分<strong>做预测</strong>（预测持续重度麻木轨迹）、第三部分<strong>找机制</strong>（术前 fMRI 基线预测轨迹归属，30 例）。</li>
           <li><strong>遇到术语先跳过</strong>：第一遍通读保持逻辑连贯，第二遍再回来查术语手册。</li>
         </ul>
       </section>
@@ -474,13 +474,13 @@ body{
    200 例患者          同 200 例           30 例患者
       │                  │                  │
  危险因素分析        LASSO + 列线图       静息态 fMRI
- + GBTM 轨迹         Bootstrap 验证       术前 vs 术后 1 月
+ + GBTM 轨迹         Bootstrap + 时间验证 术前基线 + 术后 1 月
       │                  │                  │
- "麻木分几条曲线"    "会不会麻木"         "大脑哪里变了"
+ "麻木分几条曲线"    "谁会持续重度麻木"   "基线脑特征能否预测轨迹"
 </pre></div>
 
         <div class="callout">
-          <b>一句话创新点</b>：用 200 例真实世界数据，<b>首次</b>描绘 PBC 术后麻木的"动态恢复轨迹"，据此建立预测模型；再用 30 例 fMRI <b>首次</b>探索麻木的大脑机制——临床现象 → 数学预测 → 神经机制。
+          <b>一句话创新点</b>：用 200 例真实世界数据，<b>首次</b>描绘 PBC 术后麻木的"动态恢复轨迹"，据此建立持续重度麻木轨迹预测模型；再用 30 例 fMRI 探索术前脑基线能否预测轨迹归属——临床现象 → 数学预测 → 神经机制。
         </div>
       </section>
 
@@ -517,12 +517,12 @@ body{
             </div>
             <div class="try-readout" id="bniReadout">
               <div class="ro-grade" id="roGrade">—</div>
-              <div class="ro-desc" id="roDesc">点击左侧任一级别查看详情。注意：本研究把 <strong>BNI ≥ Ⅲ 级</strong> 定义为"重度麻木"。</div>
+              <div class="ro-desc" id="roDesc">点击左侧任一级别查看详情。注意：本研究把 <strong>BNI ≥ Ⅲ 级</strong> 定义为"重度麻木"，预测模型主结局是"持续重度麻木轨迹"。</div>
               <div class="ro-flag" id="roFlag" style="display:none"></div>
             </div>
           </div>
           <div class="callout" style="margin-top:var(--space-xl)">
-            <b>这很重要，因为</b> BNI 麻木分级是本研究 <strong>GBTM 轨迹建模的因变量</strong>（用术后 1/3/6/12 月的分级画恢复曲线），也是预测模型与敏感性分析的结局指标。理解各级别含义是读懂统计部分的前提。
+            <b>这很重要，因为</b> BNI 麻木分级是本研究 <strong>GBTM 轨迹建模的因变量</strong>（用术后 1/3/6/12 月的分级画恢复曲线）。第二部分再用轨迹归属，尤其是持续重度麻木轨迹，作为预测模型结局。理解各级别含义是读懂统计部分的前提。
           </div>
         </div>
       </section>
@@ -534,10 +534,10 @@ body{
 
         <div class="section-guide">
           <div class="sg-card"><div class="sg-sec">第 1 节 · 研究背景</div><h4>双刃剑假说与 3 个研究空白</h4><p>TN 常见 → PBC 是好办法但术后麻木严重 → 麻木是"双刃剑"（适度=好，过度=差）→ 现有研究 3 个空白（无预测模型、无轨迹研究、无 fMRI 机制）。<strong>重点理解"双刃剑"假说。</strong></p></div>
-          <div class="sg-card"><div class="sg-sec">第 2 节 · 研究目的</div><h4>三个目的 = 三部分研究</h4><p>找规律（危险因素 + GBTM 轨迹）、做预测（列线图模型）、找机制（fMRI 脑可塑性）。务必把这三个目的背下来。</p></div>
-          <div class="sg-card"><div class="sg-sec">第 3 节 · 研究设计</div><h4>样本 200 / 200 / 30 与样本量依据</h4><p>三部分样本分别为 200、200、30。<strong>样本量依据（EPV 原则、G*Power 计算）是方案严谨性的体现。</strong></p></div>
+          <div class="sg-card"><div class="sg-sec">第 2 节 · 研究目的</div><h4>三个目的 = 三部分研究</h4><p>找规律（危险因素 + GBTM 轨迹）、做预测（持续重度麻木轨迹列线图模型）、找机制（术前 fMRI 基线预测轨迹归属 + 术后 1 月可塑性描述）。务必把这三个目的背下来。</p></div>
+          <div class="sg-card"><div class="sg-sec">第 3 节 · 研究设计</div><h4>样本 200 / 200 / 30 与样本量依据</h4><p>三部分样本分别为 200、200、30。第三部分为纯患者自身前后对照，不设健康对照组。<strong>样本量依据（EPV 原则、G*Power 计算）是方案严谨性的体现。</strong></p></div>
           <div class="sg-card"><div class="sg-sec">CRF · 调查内容</div><h4>4 类采集变量</h4><p>①基线 ②影像+手术 ③随访 ④fMRI。这是后面所有分析的"原料"。</p></div>
-          <div class="sg-card"><div class="sg-sec">第 5 节 · 统计分析（最关键）⭐</div><h4>三部分的统计流水线</h4><p>第一部分：单因素→多因素 Logistic→K-M→GBTM→多项 Logistic。第二部分：LASSO→Logistic→列线图→Bootstrap+校准+DCA。第三部分：fMRI 预处理→ALFF/ReHo→功能连接+ICA→Spearman 相关。配合 D 类术语精读。</p></div>
+          <div class="sg-card"><div class="sg-sec">第 5 节 · 统计分析（最关键）⭐</div><h4>三部分的统计流水线</h4><p>第一部分：单因素→多因素 Logistic→K-M→GBTM→多项 Logistic。第二部分：LASSO→Logistic→列线图→Bootstrap+时间性外部验证→校准+DCA。第三部分：术前基线 ALFF/ReHo/FC/ICA 预测轨迹归属，并用术前/术后 1 月配对比较描述可塑性。配合 D 类术语精读。</p></div>
           <div class="sg-card"><div class="sg-sec">第 6–9 节</div><h4>偏倚控制、质量、安全、伦理</h4><p>四类偏倚控制；fMRI 无创需排除金属禁忌；回顾性申请免除知情同意，前瞻性必须书面知情同意。</p></div>
         </div>
       </section>
@@ -560,7 +560,7 @@ body{
         <h3>📌 回顾要点 · Recap</h3>
         <div class="recap-grid">
           <div class="recap-item"><div class="ri-icon">🧠</div><div class="ri-label">核心主线</div><div class="ri-text">临床现象（麻木）→ 数学预测（列线图）→ 神经机制（fMRI），一条完整证据链。</div></div>
-          <div class="recap-item"><div class="ri-icon">🎯</div><div class="ri-label">三大方法</div><div class="ri-text">GBTM 画轨迹、LASSO+列线图做预测、rs-fMRI 找机制。三者递进。</div></div>
+          <div class="recap-item"><div class="ri-icon">🎯</div><div class="ri-label">三大方法</div><div class="ri-text">GBTM 画轨迹、LASSO+列线图预测持续重度麻木轨迹、rs-fMRI 看术前基线与脑可塑性。三者递进。</div></div>
           <div class="recap-item"><div class="ri-icon">🔑</div><div class="ri-label">关键术语</div><div class="ri-text">PBC、Meckel 腔、BNI 分级、GBTM、列线图、AUC/DCA、ALFF/ReHo、VPM→S1→ACC。</div></div>
           <div class="recap-item"><div class="ri-icon">⚠️</div><div class="ri-label">常见误区</div><div class="ri-text">别把 BNI 疼痛分级和麻木分级搞混——两者都是 Ⅰ–Ⅴ 级，但判定线不同。</div></div>
           <div class="recap-item"><div class="ri-icon">❓</div><div class="ri-label">下一步探索</div><div class="ri-text">深入 lcmm 包实操、glmnet 的 lambda 选择、或 DPARSF 预处理流程。</div></div>
@@ -622,7 +622,7 @@ const TERMS = [
     mem:"Ⅰ=最好，Ⅴ=最差；复发判定线划在 Ⅲ 级。"},
   {cat:"C",title:"BNI 面部麻木分级",en:"BNI Facial Numbness Scale",
     def:"BNI 专门评估麻木的量表：Ⅰ无麻木 / Ⅱ轻度不困扰 / Ⅲ有些困扰 / Ⅳ相当困扰 / Ⅴ严重干扰日常。Ⅰ–Ⅲ可接受，Ⅳ–Ⅴ不满意。",
-    use:"GBTM 轨迹建模的因变量（术后1/3/6/12月分级画轨迹）；重度麻木=BNI ≥ Ⅲ；预测模型主要结局=BNI ≥ Ⅱ。",
+    use:"GBTM 轨迹建模的因变量（术后1/3/6/12月分级画轨迹）；重度麻木=BNI ≥ Ⅲ；预测模型主结局=是否归入持续重度麻木轨迹。",
     mem:"Ⅰ–Ⅲ可接受，Ⅳ–Ⅴ难受；越靠后越严重。"},
   {cat:"C",title:"NRS 数字疼痛评分",en:"Numerical Rating Scale",
     def:"患者用 0–10 整数评价疼痛强度，0=无痛，10=最痛。最简单常用。",
@@ -643,7 +643,7 @@ const TERMS = [
   // D 统计方法
   {cat:"D",title:"EPV 原则",en:"Events Per Variable",
     def:"Logistic 回归样本量经验法则：每纳入 1 个预测变量，结局事件至少 10 例（EPV ≥ 10），否则易过拟合。",
-    use:"复发 40–50 例→4–5 变量；重度麻木 20–30 例→2–3 变量；主要结局 120–160 例→≤8 变量。",
+    use:"复发 40–50 例→4–5 变量；重度麻木 20–30 例→2–3 变量；持续重度麻木轨迹模型需按事件数控制候选变量，偏向少变量、可解释模型。",
     mem:"1 变量配 10 事件，是建模'安全线'。"},
   {cat:"D",title:"Logistic 回归",en:"Logistic Regression",
     def:"结局为二分类（复发/不复发）时用的回归模型，输出发生概率与各变量 OR 值。单因素(逐个看,P<0.10纳入)→多因素(一起建模看独立影响)→逐步回归(AIC自动选变量)。",
@@ -674,18 +674,18 @@ const TERMS = [
     use:"因变量=患者属哪条 GBTM 轨迹，自变量=各基线因素。"},
   {cat:"D",title:"LASSO 回归 ⭐",en:"Least Absolute Shrinkage & Selection Operator",
     def:"带变量筛选功能的回归。在普通回归上加'惩罚项'，自动把不重要变量系数压缩到 0，同时完成筛选和建模。候选变量多/样本相对少时比逐步回归稳健。",
-    use:"第二部分先用 LASSO(10 折交叉验证)筛变量，lambda.1se 偏好简洁模型(变量更少)；再 Logistic+列线图。",
+    use:"第二部分先用 LASSO(10 折交叉验证)筛变量，lambda.1se 偏好简洁模型(变量更少)；再 Logistic+列线图，预测持续重度麻木轨迹。",
     mem:"LASSO=自动'瘦身'的回归，lambda.1se=要更精简的版本。"},
   {cat:"D",title:"lambda.1se vs lambda.min",en:"LASSO lambda selection",
     def:"lambda 控制惩罚力度。lambda.min=使交叉验证误差最小的 λ(变量多拟合好)；lambda.1se=在最小误差一个标准误范围内最大的 λ(变量更少更简洁)。本研究选 lambda.1se。",
     use:"偏好简洁、泛化性更好的模型。",
     mem:".1se 更精简，.min 更拟合。"},
   {cat:"D",title:"列线图 ⭐",en:"Nomogram",
-    def:"把预测模型图形化的工具。每变量上方一标尺，按患者取值累加得分，总分对应预测概率（如'麻木概率 70%'）。",
-    use:"第二部分核心产出——PBC 术后麻木列线图预测模型。",
+    def:"把预测模型图形化的工具。每变量上方一标尺，按患者取值累加得分，总分对应预测概率（如'进入持续重度麻木轨迹的概率 70%'）。",
+    use:"第二部分核心产出——PBC 术后持续重度麻木轨迹列线图预测模型。",
     mem:"把多变量回归'翻译'成一张可打分的尺子图。"},
   {cat:"D",title:"AUC（ROC 曲线下面积）",en:"Area Under ROC Curve",
-    def:"衡量模型区分度（能否分开'会麻木'和'不会麻木'）。范围 0.5–1.0，0.7–0.8 尚可，0.8–0.9 好，>0.9 优秀。",
+    def:"衡量模型区分度（能否分开'会进入持续重度麻木轨迹'和'不会进入该轨迹'）。范围 0.5–1.0，0.7–0.8 尚可，0.8–0.9 好，>0.9 优秀。",
     use:"模型验证三件套之一（区分度）。"},
   {cat:"D",title:"校准曲线 + Hosmer-Lemeshow",en:"Calibration",
     def:"衡量模型准不准：预测概率与实际发生率是否吻合。曲线越贴近 45° 对角线越好；H-L 检验 P>0.05 表示校准良好。",
@@ -703,7 +703,11 @@ const TERMS = [
     use:"第二部分内部验证。"},
   {cat:"D",title:"敏感性分析",en:"Sensitivity Analysis",
     def:"换结局定义或方法重做，看结论稳不稳。",
-    use:"把结局从'主要结局(BNI≥Ⅱ)'换成'重度麻木(BNI≥Ⅲ)'重做，只报 OR 不建模型(事件少)。"},
+    use:"V1.1 主模型围绕持续重度麻木轨迹；敏感性分析可用单一时间点重度麻木(BNI≥Ⅲ)、不同轨迹定义或 FAS/PP 分析集重复检验。"},
+  {cat:"D",title:"时间性外部验证",en:"Temporal External Validation",
+    def:"把不同时间段患者分开，例如 2020–2023 年开发模型、2024–2025 年验证模型。它不是多中心外部验证，但比只在同一批数据里自测更接近真实应用。",
+    use:"V1.1/SAP 将其纳入第二部分，用较晚入组患者评估列线图的区分度、校准度和临床实用性。",
+    mem:"早期建模、晚期检验。"},
   {cat:"D",title:"Bonferroni / FWE 校正",en:"Multiple comparison correction",
     def:"多次检验时假阳性增加，需提高门槛。Bonferroni=阈值 0.05÷检验次数(严格保守)，Logistic 用它；FWE=控制'整图至少 1 个假阳性'概率，fMRI 簇水平用它。",
     mem:"检验做得多→门槛抬高→减少假阳性。"},
@@ -723,7 +727,7 @@ const TERMS = [
     use:"第三部分用 fMRI。"},
   {cat:"E",title:"静息态 fMRI",en:"Resting-State fMRI",
     def:"让受试者安静躺着什么都不做(保持清醒)时扫描。此时大脑低频自发波动反映脑区间功能连接。不需患者执行任务，适合临床研究。",
-    use:"第三部分主方法。术前 vs 术后 1 月各扫一次。",
+    use:"第三部分主方法。术前与术后 1 月各扫一次；V1.1 的关键问题是术前基线能否预测最终麻木轨迹归属。",
     mem:"躺着不动扫脑，看'默认'状态下的脑活动。"},
   {cat:"E",title:"BOLD 信号",en:"Blood Oxygen Level Dependent",
     def:"fMRI 核心信号。神经活动时局部脑血流增加，含氧/脱氧血红蛋白比例变化被 MRI 捕捉，间接反映哪里何时在活动。",
@@ -733,18 +737,18 @@ const TERMS = [
     use:"fMRI 预处理的结构基础。"},
   {cat:"E",title:"ALFF 低频振幅 ⭐",en:"Amplitude of Low-Frequency Fluctuation",
     def:"计算每体素 BOLD 信号在低频段(0.01–0.08 Hz)的波动幅度。ALFF 高=该脑区自发神经活动强。",
-    use:"比较术前 vs 术后、不同轨迹组 ALFF 差异，找'哪里活动变了'。",
+    use:"重点看术前基线 ALFF 是否能预测最终轨迹归属，同时描述术前 vs 术后 1 月变化。",
     mem:"ALFF 看'幅度(有多强)'。"},
   {cat:"E",title:"ReHo 局部一致性 ⭐",en:"Regional Homogeneity",
     def:"衡量一体素与周围相邻体素 BOLD 时间序列的同步性。ReHo 高=局部神经活动协调一致。",
-    use:"与 ALFF 互补。ALFF 看幅度，ReHo 看同步。",
+    use:"与 ALFF 互补。可用于术前基线轨迹预测，也可描述术前/术后 1 月可塑性变化。ALFF 看幅度，ReHo 看同步。",
     mem:"ReHo 看'同步(协不协调)'。"},
   {cat:"E",title:"功能连接 FC",en:"Functional Connectivity",
-    def:"两个脑区 BOLD 时间序列的相关性。相关高=两脑区'协同工作'。本研究用种子点法：选关键脑区(丘脑VPM、S1、ACC)作种子，看其与全脑连接强度变化。",
+    def:"两个脑区 BOLD 时间序列的相关性。相关高=两脑区'协同工作'。本研究用种子点法：选关键脑区(丘脑VPM、S1、ACC)作种子，看术前基线连接是否预测轨迹，并描述术后连接变化。",
     mem:"FC=两个脑区'连线强不强'。"},
   {cat:"E",title:"ICA 独立成分分析 ⭐",en:"Independent Component Analysis",
     def:"数据驱动方法，不预设脑区，从整个 fMRI 信号自动分解出若干独立'脑网络'(默认网络、注意网络等)。用 GIFT 工具箱。",
-    use:"与种子点法(假设驱动)互补印证。种子点法先选脑区，ICA 让数据自己说话。"},
+    use:"与种子点法(假设驱动)互补印证。种子点法先选脑区，ICA 让数据自己说话；V1.1 中可用于基线预测和前后变化描述。"},
   {cat:"E",title:"DPARSF / SPM12 / GIFT",en:"fMRI toolboxes",
     def:"DPARSF=基于 MATLAB 的 fMRI 预处理工具箱(中国严超赣团队)，自动完成时间层/头动校正、配准、平滑、滤波。SPM12=国际主流统计分析平台。GIFT=做 ICA 的工具箱。",
     mem:"DPARSF 预处理→SPM12 统计→GIFT 做 ICA。"},
@@ -752,8 +756,8 @@ const TERMS = [
     def:"体素=脑图最小三维单元。先体素水平设阈值(P<0.005)，再看连续体素形成的'簇'是否在簇水平 FWE 校正后仍显著(P<0.05)，既控假阳性又不漏真信号。",
     use:"fMRI 统计的双重校正。"},
   {cat:"E",title:"配对 t / 两样本 t 检验",en:"Paired/Two-sample t-test",
-    def:"配对 t=同一批人前后比较(术前vs术后1月)，消除个体差异更敏感，本研究 fMRI 主分析用它；两样本 t=两组不同的人比较，按轨迹分组后用。",
-    use:"fMRI 组间/前后比较。"},
+    def:"配对 t=同一批人前后比较(术前vs术后1月)，用于描述脑功能可塑性；两样本 t=两组不同的人比较，如术前基线快速恢复轨迹 vs 持续重度麻木轨迹。",
+    use:"V1.1 的关键时序是先用术前基线比较/预测轨迹归属，再描述术后 1 月变化。"},
   {cat:"E",title:"Spearman 相关",en:"Spearman correlation",
     def:"非参数相关(不要求数据正态)，用秩次计算。比 Pearson 稳健。",
     use:"看'脑影像变化量'与'临床指标变化量'是否相关(如 ACC 活动降越多，麻木减越多?)。"},
@@ -843,7 +847,7 @@ document.getElementById('glossSearch').addEventListener('input',applyFilter);
 const BNI_GRADES = [
   {g:'Ⅰ',color:'#10b981',desc:'无面部麻木。',flag:'',flagColor:''},
   {g:'Ⅱ',color:'#84cc16',desc:'轻度面部麻木，但<strong>不困扰</strong>患者。',flag:'可接受',flagColor:'#10b981'},
-  {g:'Ⅲ',color:'#f59e0b',desc:'面部麻木，<strong>有些困扰</strong>患者。',flag:'本研究"重度麻木"起点 / 预测模型次要结局',flagColor:'#f59e0b'},
+  {g:'Ⅲ',color:'#f59e0b',desc:'面部麻木，<strong>有些困扰</strong>患者。',flag:'本研究"重度麻木"起点 / 轨迹建模关键阈值',flagColor:'#f59e0b'},
   {g:'Ⅳ',color:'#f97316',desc:'面部麻木，<strong>相当困扰</strong>（4–5 级提示不满意）。',flag:'不满意',flagColor:'#ef4444'},
   {g:'Ⅴ',color:'#ef4444',desc:'严重面部麻木，<strong>干扰日常活动</strong>。',flag:'不满意',flagColor:'#ef4444'},
 ];
@@ -889,8 +893,8 @@ const QUIZ=[
    fb:"对。VPM→S1→ACC 三站对应麻木的'传导→感知→难受'，完整覆盖麻木从外周到主观困扰的全通路。"},
   {q:"种子点法和 ICA 的根本区别是什么？",o:["没有区别","种子点法=假设驱动(先选脑区)；ICA=数据驱动(自动分解脑网络)","种子点法更新","ICA 是种子点的子集"],a:1,
    fb:"对。种子点法需预先选定感兴趣区（假设驱动），ICA 不预设让数据自己分解出网络（数据驱动），两者互补印证。"},
-  {q:"（综合）若你是审稿人，最可能质疑这份方案的哪一点？",o:["方案太简单","无独立外部验证队列（第二部分仅内部验证），这是方案自认的限制","样本太大","方法太多"],a:1,
-   fb:"对。无外部验证是方案明确承认的限制；此外对照组表述、参考文献数量(仅 4 篇)也可能被追问。"},
+  {q:"（综合）若你是审稿人，最可能质疑 V1.1 方案的哪一点？",o:["方案太简单","时间性外部验证仍不是多中心外部验证，且 fMRI 样本量较小","样本太大","方法太少"],a:1,
+   fb:"对。V1.1 已加入时间性外部验证并删除健康对照矛盾，但时间验证仍不等于多中心外部验证；fMRI 30 例也更偏探索性。"},
 ];
 const qc=document.getElementById('quizContainer');
 const answered={};
