@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-ha-style="document">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>核心文献速查表 · PBC 术后麻木机制研究</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teaching-accent:#0f766e;--teaching-accent-soft:#ccfbf1;--teaching-accent-deep:#134e4a;
+  --primary:#a03b00;
+  --bg:#fff8f6;--surface:#fff;--surface-low:#fbf2ef;--surface-container:#f5ece9;
+  --fg-1:#1e1b19;--fg-2:#594138;--fg-muted:#8d7166;
+  --border:rgba(0,0,0,.06);--border-strong:rgba(0,0,0,.12);
+  --font-headline:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;
+  --font-body:'Plus Jakarta Sans',ui-sans-serif,system-ui,sans-serif;
+  --font-mono:'SF Mono','Menlo',ui-monospace,monospace;
+  --radius-md:12px;--radius-lg:16px;--radius-pill:9999px;
+  --shadow-md:0 4px 12px rgba(30,27,25,.08);--shadow-lg:0 8px 24px rgba(30,27,25,.12);
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#060B18;--surface:#0B1426;--surface-low:#101D35;--surface-container:#162544;
+    --fg-1:#F8FAFC;--fg-2:#CBD5E1;--fg-muted:#64748B;
+    --border:rgba(255,255,255,.08);--border-strong:rgba(255,255,255,.14);
+    --teaching-accent:#2dd4bf;--teaching-accent-soft:#134e4a;--teaching-accent-deep:#5eead4;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--fg-1);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+::selection{background:var(--teaching-accent-soft)}
+:focus-visible{outline:2px solid var(--teaching-accent);outline-offset:2px;border-radius:6px}
+
+/* ===== 顶部导航（与 library 一致）===== */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,248,246,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:14px}
+@media(prefers-color-scheme:dark){.topbar{background:rgba(11,20,38,.92)}}
+.topbar-logo{width:36px;height:36px;border-radius:10px;flex-shrink:0;display:grid;place-items:center;background:linear-gradient(135deg,var(--teaching-accent),var(--teaching-accent-deep));color:#fff;font-family:var(--font-headline);font-weight:700;font-size:15px}
+.topbar-title{font-family:var(--font-headline);font-weight:600;font-size:15px;line-height:1.2}
+.topbar-sub{font-size:11px;color:var(--fg-muted);margin-top:1px}
+.topbar-nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.topbar-nav a{padding:7px 12px;border-radius:var(--radius-pill);text-decoration:none;font-size:13px;color:var(--fg-2);font-weight:500;transition:all .15s;border:1px solid transparent}
+.topbar-nav a:hover{background:var(--surface-container);color:var(--fg-1)}
+.topbar-nav a.active{background:var(--teaching-accent-soft);color:var(--teaching-accent-deep);border-color:var(--teaching-accent)}
+
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+@media(min-width:1024px){.wrap{max-width:1280px;padding:0 40px}}
+
+/* ===== 页头 ===== */
+.page-head{padding:40px 0 20px}
+.page-head h1{font-family:var(--font-headline);font-weight:700;font-size:30px;letter-spacing:-.01em;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.page-head h1 .star-badge{font-size:14px;background:#fef3c7;color:#92400e;padding:4px 12px;border-radius:var(--radius-pill);font-weight:600}
+.page-head p{color:var(--fg-2);font-size:15px;max-width:680px}
+.page-head .head-meta{font-size:12.5px;color:var(--fg-muted);margin-top:8px}
+
+/* ===== 控制条（搜索+筛选一体）===== */
+.controls{
+  position:sticky;top:69px;z-index:40;background:var(--bg);padding:12px 0;
+  display:flex;flex-direction:column;gap:10px;
+}
+.search-wrap{position:relative;flex:1}
+.search-input{
+  width:100%;padding:13px 16px 13px 44px;border:1px solid var(--border-strong);border-radius:var(--radius-pill);
+  background:var(--surface);color:var(--fg-1);font-family:inherit;font-size:15px;transition:all .15s;
+}
+.search-input:focus{outline:none;border-color:var(--teaching-accent);box-shadow:0 0 0 3px var(--teaching-accent-soft)}
+.search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--fg-muted);font-size:16px;pointer-events:none}
+
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap}
+.filter-chip{
+  padding:7px 13px;border-radius:var(--radius-pill);background:var(--surface);border:1px solid var(--border-strong);
+  font-size:12.5px;font-weight:500;color:var(--fg-2);cursor:pointer;transition:all .15s;font-family:inherit;
+  display:inline-flex;align-items:center;gap:5px;
+}
+.filter-chip:hover{border-color:var(--teaching-accent)}
+.filter-chip.active{background:var(--teaching-accent);color:#fff;border-color:var(--teaching-accent)}
+.filter-chip .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.filter-chip.active .dot{background:#fff!important}
+
+/* 桌面端搜索与筛选并排 */
+@media(min-width:768px){
+  .controls{flex-direction:row;align-items:center}
+  .filter-bar{flex-wrap:wrap}
+}
+
+.result-count{font-size:13px;color:var(--fg-muted);padding:4px 0 16px}
+.result-count b{color:var(--fg-1);font-weight:600}
+
+/* ===== 文献卡片 ===== */
+.ref-list{display:flex;flex-direction:column;gap:14px;padding-bottom:16px}
+.ref-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  overflow:hidden;transition:all .2s;border-left:4px solid var(--grp-color,var(--teaching-accent));
+}
+.ref-card:hover{box-shadow:var(--shadow-md);transform:translateX(2px)}
+.ref-card.dimmed{display:none}
+
+.rc-head{padding:18px 20px 14px;cursor:pointer;user-select:none}
+.rc-head-row{display:flex;align-items:flex-start;gap:12px}
+.rc-num{
+  flex-shrink:0;width:34px;height:34px;border-radius:8px;display:grid;place-items:center;
+  font-family:var(--font-headline);font-weight:700;font-size:13px;
+  background:var(--grp-bg,var(--teaching-accent-soft));color:var(--grp-color,var(--teaching-accent-deep));
+}
+.rc-title-wrap{flex:1;min-width:0}
+.rc-title{font-family:var(--font-headline);font-weight:600;font-size:15.5px;line-height:1.4;color:var(--fg-1)}
+.rc-author{font-size:12px;color:var(--fg-muted);margin-top:3px;font-style:italic}
+.rc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.rc-tag{
+  font-size:10.5px;padding:3px 9px;border-radius:var(--radius-pill);font-weight:500;
+  background:var(--surface-container);color:var(--fg-2);
+}
+.rc-tag.grp{background:var(--grp-bg);color:var(--grp-color);font-weight:600}
+.rc-tag.priority{background:#fef3c7;color:#92400e;font-weight:600}
+.rc-toggle{
+  flex-shrink:0;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;
+  background:var(--surface-container);color:var(--fg-muted);font-size:18px;transition:all .2s;
+  border:none;cursor:pointer;
+}
+.ref-card.open .rc-toggle{transform:rotate(45deg);background:var(--teaching-accent);color:#fff}
+
+.rc-body{max-height:0;overflow:hidden;transition:max-height .3s ease;padding:0 20px}
+.ref-card.open .rc-body{max-height:1200px;padding:0 20px 20px}
+.rc-body p{font-size:13.5px;color:var(--fg-2);margin-bottom:10px;line-height:1.6}
+.rc-body p:last-child{margin-bottom:0}
+.rc-label{font-weight:700;color:var(--fg-1);display:inline-block;margin-right:4px}
+.rc-data{
+  margin-top:4px;padding:12px 14px;background:var(--surface-low);border-radius:var(--radius-md);
+  font-size:13px;color:var(--fg-1);line-height:1.55;border-left:3px solid var(--grp-color,var(--teaching-accent));
+}
+.rc-data .rd-label{font-weight:700;color:var(--grp-color,var(--teaching-accent-deep));margin-right:4px}
+.rc-sections{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.rc-sec-chip{
+  font-size:11px;padding:4px 10px;border-radius:var(--radius-pill);font-weight:500;
+  background:#dbeafe;color:#1e40af;border:1px solid transparent;
+}
+
+/* 分组配色 */
+.ref-card[data-grp="A"]{--grp-color:#0369a1;--grp-bg:#dbeafe}
+.ref-card[data-grp="B"]{--grp-color:#c2410c;--grp-bg:#ffedd5}
+.ref-card[data-grp="C"]{--grp-color:#7c3aed;--grp-bg:#ede9fe}
+.ref-card[data-grp="D"]{--grp-color:#be185d;--grp-bg:#fce7f3}
+.ref-card[data-grp="E"]{--grp-color:#16a34a;--grp-bg:#dcfce7}
+
+/* ===== 方案-文献对照表 ===== */
+.mapping-section{padding:32px 0 16px;margin-top:24px;border-top:1px solid var(--border)}
+.mapping-section h2{font-family:var(--font-headline);font-weight:700;font-size:22px;margin-bottom:6px}
+.mapping-section .ms-desc{font-size:13.5px;color:var(--fg-muted);margin-bottom:18px}
+.map-table{width:100%;border-collapse:collapse;font-size:13px;background:var(--surface);border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border)}
+.map-table th,.map-table td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+.map-table th{background:var(--surface-container);font-family:var(--font-headline);font-weight:600;font-size:12px;color:var(--fg-muted);text-transform:uppercase;letter-spacing:.04em}
+.map-table tr:last-child td{border-bottom:none}
+.map-table td:first-child{font-weight:600;color:var(--fg-1);white-space:nowrap}
+.map-table td:nth-child(2){font-family:var(--font-mono);font-size:12px;color:var(--teaching-accent-deep)}
+.map-table td:nth-child(3){color:var(--fg-2);line-height:1.5}
+@media(max-width:680px){
+  .map-table{font-size:12px}
+  .map-table th,.map-table td{padding:8px 10px}
+}
+
+/* ===== 空状态 ===== */
+.empty-state{text-align:center;padding:60px 20px;color:var(--fg-muted)}
+.empty-state .es-icon{font-size:48px;margin-bottom:12px;opacity:.5}
+.empty-state p{font-size:14px}
+
+/* ===== 答辩重点 ===== */
+.key-section{padding:24px 0 16px;margin-top:8px}
+.key-section h2{font-family:var(--font-headline);font-weight:700;font-size:22px;margin-bottom:6px}
+.key-section .ks-desc{font-size:13.5px;color:var(--fg-muted);margin-bottom:18px}
+.key-list{display:flex;flex-direction:column;gap:10px}
+.key-item{
+  display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--radius-md);
+}
+.key-rank{
+  flex-shrink:0;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--teaching-accent),var(--teaching-accent-deep));color:#fff;
+  font-family:var(--font-headline);font-weight:700;font-size:14px;
+}
+.key-text{flex:1;font-size:13.5px;color:var(--fg-2)}
+.key-text b{color:var(--fg-1)}
+.key-num{font-family:var(--font-mono);font-weight:600;color:var(--teaching-accent-deep);font-size:13px}
+
+/* ===== footer ===== */
+footer{padding:32px 0 56px;text-align:center;border-top:1px solid var(--border);margin-top:32px}
+footer p{font-size:13px;color:var(--fg-muted);line-height:1.7}
+footer a{color:var(--teaching-accent-deep);text-decoration:none;font-weight:500}
+
+@media(max-width:680px){
+  body{font-size:14.5px}
+  .wrap{padding:0 16px}
+  .page-head{padding:32px 0 16px}
+  .page-head h1{font-size:24px}
+  .rc-head{padding:14px 16px 12px}
+  .rc-body{padding:0 16px}
+  .ref-card.open .rc-body{padding:0 16px 16px}
+}
+
+@media print{
+  .topbar,.controls{display:none}
+  .ref-card.open .rc-body{max-height:none}
+  .rc-body{max-height:none!important}
+  .ref-card{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 顶部导航 ===== -->
+<header class="topbar">
+  <a href="index.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px">
+    <div class="topbar-logo">PBC</div>
+    <div>
+      <div class="topbar-title">PBC 术后麻木机制研究</div>
+      <div class="topbar-sub">核心文献速查表</div>
+    </div>
+  </a>
+  <nav class="topbar-nav">
+    <a href="index.html">首页</a>
+    <a href="project.html">项目简介</a>
+    <a href="library.html">文献库</a>
+    <a href="references.html" class="active">速查表</a>
+    <a href="handbook.html">学习手册</a>
+  </nav>
+</header>
+
+<div class="wrap">
+
+  <!-- ===== 页头 ===== -->
+  <section class="page-head">
+    <h1>⭐ 核心文献速查表 <span class="star-badge">16 篇</span></h1>
+    <p>写方案 / 开题报告 / 答辩时，一眼定位"这篇文献能用在本研究的哪个部分"。摘自 50 篇精读笔记中标记为 ⭐ 的核心文献。</p>
+    <div class="head-meta">📚 完整笔记见 <code>文献精读笔记-50篇.md</code>（按编号检索） · 📅 生成于 2026-07-05</div>
+  </section>
+
+  <!-- ===== 控制条 ===== -->
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="search" class="search-input" id="searchInput" placeholder="搜索文献（编号/标题/作者/借鉴点）…" aria-label="搜索文献">
+    </div>
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-chip active" data-grp="ALL">全部 <span class="dot" style="background:#888"></span></button>
+      <button class="filter-chip" data-grp="A"><span class="dot" style="background:#0369a1"></span>PBC手术与麻木</button>
+      <button class="filter-chip" data-grp="B"><span class="dot" style="background:#c2410c"></span>预测模型方法</button>
+      <button class="filter-chip" data-grp="C"><span class="dot" style="background:#7c3aed"></span>rs-fMRI脑机制</button>
+      <button class="filter-chip" data-grp="D"><span class="dot" style="background:#be185d"></span>GBTM方法学</button>
+      <button class="filter-chip" data-grp="E"><span class="dot" style="background:#16a34a"></span>量表与流行病</button>
+    </div>
+  </div>
+
+  <div class="result-count" id="resultCount">显示全部 16 篇</div>
+
+  <!-- ===== 文献卡片列表 ===== -->
+  <div class="ref-list" id="refList"></div>
+
+  <!-- ===== 方案-文献对照表 ===== -->
+  <section class="mapping-section">
+    <h2>📑 方案章节 → 文献对照</h2>
+    <p class="ms-desc">写每个章节时，直接按下表引用对应文献。</p>
+    <table class="map-table">
+      <thead><tr><th>方案章节</th><th>引用文献</th><th>引用要点</th></tr></thead>
+      <tbody>
+        <tr><td>研究背景</td><td>38</td><td>"周围-中枢双重机制"立论框架</td></tr>
+        <tr><td>研究背景</td><td>01</td><td>"萎缩神经更易麻木"为机制假设提供依据</td></tr>
+        <tr><td>研究背景</td><td>02</td><td>"压力-止痛-麻木"权衡（双刃剑）</td></tr>
+        <tr><td>研究背景</td><td>48</td><td>PBC 选择性损伤大有髓纤维→麻木是"成功标志"</td></tr>
+        <tr><td>第一部分·变量定义</td><td>01</td><td>CSA 比值（影像变量）</td></tr>
+        <tr><td>第一部分·变量定义</td><td>02</td><td>球囊压力 IBP（手术变量）</td></tr>
+        <tr><td>第一部分·变量定义</td><td>04, 48</td><td>压迫时间 >60 秒阈值</td></tr>
+        <tr><td>第一部分·变量定义</td><td>33</td><td>NVC 9 分制（神经压迫量化）</td></tr>
+        <tr><td>第一部分·GBTM 方法</td><td>39</td><td>BIC + AvePP≥0.7 模型选择标准</td></tr>
+        <tr><td>第一部分·GBTM 方法</td><td>40</td><td>GBTM=LCGA 的界定与选用论证</td></tr>
+        <tr><td>第一部分·GBTM 方法</td><td>41</td><td>lcmm 包 hlme 函数实施流程</td></tr>
+        <tr><td>第二部分·列线图方法</td><td>04</td><td>Cox+AIC+列线图流程模板</td></tr>
+        <tr><td>第二部分·列线图方法</td><td>08</td><td>PROBAST+CHARMS+TRIPOD 质控规范</td></tr>
+        <tr><td>第二部分·列线图方法</td><td>50</td><td>LASSO+Logistic+列线图直接参照</td></tr>
+        <tr><td>第二部分·性能基准</td><td>08</td><td>合并 AUC=0.83 作对照</td></tr>
+        <tr><td>第三部分·fMRI 指标</td><td>26</td><td>ReHo+fALFF 双指标+参数模板</td></tr>
+        <tr><td>第三部分·fMRI 指标</td><td>25</td><td>多指标互补策略论证</td></tr>
+        <tr><td>第三部分·种子点选择</td><td>23, 25, 33</td><td>ROI 候选：岛叶/梭状回/mPFC/小脑/S1</td></tr>
+        <tr><td>第三部分·种子点选择</td><td>49</td><td>丘脑核团 → VPM 解剖先验</td></tr>
+        <tr><td>第三部分·ICA 方法</td><td>28</td><td>Group ICA + CONN 流程</td></tr>
+        <tr><td>第三部分·预处理流程</td><td>33, 49</td><td>DPARSF/FWE 校正/入排标准</td></tr>
+        <tr><td>CRF·量表选择</td><td>45</td><td>麻木评估工具困境说明</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== 答辩重点 ===== -->
+  <section class="key-section">
+    <h2>🎓 答辩 / 送审重点（建议精读全文）</h2>
+    <p class="ks-desc">按重要性排序，这 6 篇最关键，涵盖三大方法学支柱。</p>
+    <div class="key-list">
+      <div class="key-item"><div class="key-rank">1</div><div class="key-text"><b>lcmm 包官方论文</b> — GBTM 实施工具的权威依据</div><div class="key-num">No.41</div></div>
+      <div class="key-item"><div class="key-rank">2</div><div class="key-text"><b>TN 复发预测模型 Meta 分析</b> — 预测模型方法学质控标杆</div><div class="key-num">No.08</div></div>
+      <div class="key-item"><div class="key-rank">3</div><div class="key-text"><b>TN 脑活动 ALE Meta</b> — fMRI 脑区选择的循证依据</div><div class="key-num">No.25</div></div>
+      <div class="key-item"><div class="key-rank">4</div><div class="key-text"><b>Kourilsky 复发模型</b> — 列线图方法学直接对标</div><div class="key-num">No.04</div></div>
+      <div class="key-item"><div class="key-rank">5</div><div class="key-text"><b>TN 大规模 MRI 数据集</b> — fMRI 方法学直接对标</div><div class="key-num">No.49</div></div>
+      <div class="key-item"><div class="key-rank">6</div><div class="key-text"><b>Du 2026 PBC 并发症模型</b> — 同领域同术式最强相关</div><div class="key-num">No.50</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>核心文献速查表 · 16 篇 ⭐ 文献 · 摘自《文献精读笔记-50篇》<br>
+    完整笔记请查 <code>文献精读笔记-50篇.md</code> · 在线访问 <a href="https://bigball-wu.github.io/PBC-Numbness-Study/references.html">bigball-wu.github.io/PBC-Numbness-Study/references</a></p>
+  </footer>
+
+</div>
+
+<script>
+/* ===================== 16 篇核心文献数据 ===================== */
+const REFS = [
+  // A 组：PBC 手术与麻木
+  {num:1, grp:"A", title:"三叉神经近端萎缩与PBC术后良好预后及持续面部麻木相关", author:"Li 2023 · Acta Neurochir",
+   design:"单中心回顾性队列；58 例 PBC 患者；随访 23.8 个月",
+   borrow:"近端 CSA 比值纳入第一部分影像变量；'萎缩→更易麻木'写入研究背景；CSA 测量法可作影像手册模板。阈值需在 200 例重新标定。",
+   data:"CSA≤87% 为萎缩阈值；萎缩者 4 年良好预后 94.4% vs 30.8% (p=0.005)",
+   sections:["研究背景","第一部分·变量定义"]},
+  {num:2, grp:"A", title:"球囊压力与PBC治疗原发性三叉神经痛的临床疗效", author:"Peng 2024 · Pain Physician",
+   design:"前瞻观察；45 例；术后随访 3 个月",
+   borrow:"球囊压力(IBP)作核心手术变量；IBP-FBP 差值是创新变量；AUC 0.98 提示可能是列线图关键贡献变量。注意压力监测需专用设备。",
+   data:"IBP 预测重度麻木 AUC=0.980；安全范围 138.65–153.90 KPa",
+   sections:["研究背景","第一部分·变量定义"]},
+  {num:4, grp:"A", title:"预测PBC术后疼痛复发与感觉并发症的多变量模型", author:"Kourilsky 2022 · J Neurosurg",
+   design:"双中心回顾性；131 例首次 PBC；中位随访 3.0 年",
+   borrow:"方法学高度对标第二部分：Cox+AIC+列线图流程；'严重感觉并发症'操作定义可借鉴用于'持续重度麻木轨迹'判定；压迫>60 秒阈值可纳入方案。",
+   data:"6 个独立复发因素；压迫>60 秒是并发症唯一预测因素",
+   sections:["第一部分·变量定义","第二部分·列线图方法"]},
+  {num:48, grp:"A", title:"基于球囊压力监测的PBC治疗TN 56例疗效(经典)", author:"Brown 2005 · Neurosurg Focus",
+   design:"单术者回顾；56 例；中位随访 17 个月",
+   borrow:"压力监测标准化(1160±62 mmHg)作变量；'压迫时间直接相关麻木'为核心假设提供经典证据；麻木分布作轨迹分类基线参考。",
+   data:"即时缓解 92%；持续非困扰性麻木 17%；中重度麻木 0%；压迫时间与麻木 p=0.03",
+   sections:["研究背景","第一部分·变量定义"]},
+
+  // B 组：预测模型方法
+  {num:8, grp:"B", title:"TN术后复发预警：预测模型的系统综述与Meta分析", author:"2025 · Meta分析",
+   design:"检索 8 库；纳入 20 项研究、4291 例",
+   borrow:"方法学借鉴价值最高：PROBAST+CHARMS+TRIPOD 作质控与报告规范；合并 AUC(0.83) 作性能基准；关键预测因子(年龄≥65、病程>5年、非典型痛)提示变量筛选方向。注意本 Meta 针对复发非麻木。",
+   data:"训练集 AUC=0.86，验证集 AUC=0.83；20 项研究 4291 例",
+   sections:["第二部分·列线图方法","第二部分·性能基准"]},
+  {num:50, grp:"B", title:"PBC术后并发症预测模型构建", author:"Du 2026 · World Neurosurg",
+   design:"单中心回顾；200 例 → 纳入 164 例；随访 2 年",
+   borrow:"方法学直接参照（LASSO+Logistic+列线图+AUC/校准/DCA 与本研究高度一致）；压迫时长是显著因素应重点纳入；CD4+/免疫指标启发探索炎症标志物。同领域同术式(PBC)强相关，应重点引用。",
+   data:"模型 AUC=0.793；独立危险因素：神经分支、糖尿病、压迫时长、CD4+",
+   sections:["第二部分·列线图方法"]},
+
+  // C 组：rs-fMRI 脑机制
+  {num:23, grp:"C", title:"个体化rs-fMRI揭示TN脑回路异质性并预测早期复发", author:"2025 · 原创研究",
+   design:"30 例 TN + 30 例对照；15 例行射频消融；随访 6 月~3 年",
+   borrow:"直接支撑第三部分。'个体化 rs-fMRI'思路与本研究'术前基线预测轨迹归属'高度契合；高风险脑区可设 ROI 作种子点；ReHo 参数(带通0.01–0.08Hz)作预处理模板。注意预测复发非麻木，脑区可能重叠但不完全相同。",
+   data:"6 个高风险复发脑区(复发率100%)：对侧岛叶、梭状回、蚓部、颞上回；术后6月复发率26.7%",
+   sections:["第三部分·种子点选择"]},
+  {num:25, grp:"C", title:"TN脑活动与脑网络连接异常：rs-fMRI的ALE Meta分析", author:"Yang 2026 · Meta分析",
+   design:"检索 3 库；纳入 16 项研究（375 例功能指标、204 例功能连接）",
+   borrow:"强支撑第三部分。ALE 级循证明确 mPFC、后小脑叶、颞极为核心异常脑区，作种子点/ROI 选择依据；'多指标互补'结论论证第三部分应采用多指标分析策略；NOS 评估和 ALE 方法可写入方法学。",
+   data:"ALFF/fALFF 示左侧 mPFC 低活动；ReHo/DC 示后小脑叶、颞极高活动",
+   sections:["第三部分·fMRI 指标","第三部分·种子点选择"]},
+  {num:26, grp:"C", title:"特发性TN患者自发脑活动的改变：rs-fMRI研究", author:"Yuan 2018 · Front Neurol",
+   design:"病例对照；23 例 ITN + 23 例健康对照",
+   borrow:"支撑第三部分方法学。ReHo+fALFF 双指标及参数(带通0.01–0.08Hz、KCC、TR 2000ms)作预处理流水线模板；'ReHo 与 VAS 正相关'支持脑活动指标具临床意义，提示可探索术前脑活动与术后麻木轨迹相关性；异常脑区可作 ROI 候选。",
+   data:"多脑区 ReHo 与 VAS 正相关(疼痛越重一致性越高)；fALFF 与 VAS 无相关",
+   sections:["第三部分·fMRI 指标"]},
+  {num:28, grp:"C", title:"TN微血管减压术后感觉运动网络的改变：ICA随访研究", author:"Li 2025 · Front Physiol",
+   design:"前瞻随访；40 例 MVD + 25 例对照；术后 6 月",
+   borrow:"方法论支撑第三部分。Group ICA+CONN 方法可借鉴；'术前-术后配对随访'设计与本研究 30 例 fMRI 思路一致；'岛叶活动持续增高即使临床有效也未完全逆转'为'持续性麻木脑机制'提供假说。需明确本研究用 PBC 非 MVD。",
+   data:"右侧额盖/岛叶/额下回/额极持续增高；MVD 有效但未完全逆转",
+   sections:["第三部分·ICA 方法"]},
+  {num:33, grp:"C", title:"TN患者大脑默认模式网络与体感系统的功能改变", author:"2024 · 原创研究",
+   design:"横断面病例对照；38 例 TN + 20 例对照",
+   borrow:"ALFF/ReHo 方法学流程(带通0.01–0.08Hz、DPARSF、年龄作协变量、FWE 校正)可直接复用于第三部分；'右侧中央后回(S1)ReHo 异常'为种子点选择 VPM/S1 提供先验；NVC 9 分制可作第一部分神经压迫程度量化变量。",
+   data:"ReHo 差异含双侧额中回、小脑、右侧 S1；ALFF 差异含辅助运动区",
+   sections:["第三部分·预处理流程","第三部分·种子点选择","第一部分·变量定义"]},
+  {num:49, grp:"C", title:"慢性TN患者术前术后MRI大规模数据集", author:"2024 · Scientific Data",
+   design:"前瞻数据集；160 例(112 例 TN + 48 例对照)；58 例有术后 6 月 MRI",
+   borrow:"第三部分 fMRI 方法学和数据采集协议的直接对标对象。多模态序列设计、入排标准(排除继发性 TN、MMSE>24、右利手)可参考；丘脑核团灰质改变为种子点选 VPM 提供解剖先验；构建'中枢敏化未消退→持续麻木'假说。",
+   data:"双侧 FA 降低；患侧三叉神经根 MPF 显著降低；术后6月丘脑核团体积未恢复",
+   sections:["第三部分·预处理流程","第三部分·种子点选择"]},
+
+  // D 组：GBTM 方法学
+  {num:39, grp:"D", title:"GBTM的临床研究最新进展", author:"Nagin 2024 · Annu Rev Clin Psychol",
+   design:"方法学综述；引用 2010–2022 年 858 篇 GBTM 文献",
+   borrow:"第一部分 GBTM 章节方法学主体。BIC+AvePP≥0.7 作模型选择报告标准；'多轨迹模型'思路(同时建模疼痛缓解与麻木恢复)可直接借鉴；'非随机失访校正'适用 200 例回顾性数据；'轨迹-远期结局关联'支撑第二部分以'持续重度麻木轨迹'为结局的逻辑。",
+   data:"GBTM 文献 2010 年来增长 8.5 倍；PPGM 是轨迹质量评估核心统计量",
+   sections:["第一部分·GBTM 方法"]},
+  {num:40, grp:"D", title:"LCGA与GMM入门(方法学经典)", author:"Jung 2008 · Soc Personal Psychol Compass",
+   design:"方法学教学综述 + Mplus 实操",
+   borrow:"方法学选择段落应引用本文界定 GBTM=LCGA(组内方差=0)与 GMM 差异，论证选用 lcmm 包 hlme 函数(LCGA 框架)的合理性；'BIC+LMR-LRT+理论可解释性'三重判据作轨迹数确定依据；'局部最优解需多随机起始值'写入质量控制。",
+   data:"BIC 在信息准则中表现最佳，BLRT 最稳健；类别数需统计+理论双驱动",
+   sections:["第一部分·GBTM 方法"]},
+  {num:41, grp:"D", title:"lcmm包扩展混合模型(R包官方论文)", author:"Proust-Lima 2017 · J Stat Softw",
+   design:"R 包方法学介绍 + PAQUID 认知老化队列示例(N=500+)",
+   borrow:"第一部分 GBTM 实施章节应明确指定 R lcmm 包 hlme 函数，按流程：①先拟合无类别线性混合模型获取初始值；②依次拟合 1~5 类比较 BIC；③报告每类 AvePP 和分类熵。本文是 lcmm 包权威引用必引；Jointlcmm'轨迹+事件联合'可用于未来扩展。",
+   data:"四大函数：hlme/lcmm/multlcmm/Jointlcmm；hlme 即本研究需要的 GBTM 函数",
+   sections:["第一部分·GBTM 方法"]},
+
+  // E 组：量表与流行病学
+  {num:38, grp:"E", title:"三叉神经痛：基础与临床(综述)", author:"Araya 2020 · Curr Neuropharmacol",
+   design:"叙述性综述；覆盖流行病学/症状/病理/诊断/药物",
+   borrow:"方案'研究背景'核心理论框架来源。'周围-中枢双重机制'立论；'持续痛/感觉损害预示预后差'为关注'术后持续重度麻木'提供病理学合理性；流行病学数据可用于样本特征描述。",
+   data:"女:男 2-3:1；90%起病>40 岁；右>左；V2/V3 最常受累，V1 仅 1-5%",
+   sections:["研究背景"]},
+  {num:45, grp:"E", title:"TN患者报告结局量表的心理测量学性能(系统综述)", author:"Sandilya 2021 · Eur J Pain",
+   design:"COSMIN 系统综述；5 库检索；纳入 6 项研究、5 个 PROM",
+   borrow:"结局变量定义章节应引用本文论证麻木评估工具选择困境；VAS/BNI-PS 在 TN 缺乏验证提示方案应在方法学局限说明'工具标准化不足'；支持采用 BPI-Facial(中等证据)作次要结局，同时记录感觉障碍分级以弥补工具不足。",
+   data:"5 个 PROM 中仅 Penn-FPS-R 和 BPI-Facial 有部分验证；VAS/BNI-PS 无验证证据",
+   sections:["CRF·量表选择"]},
+];
+
+const GRP_NAMES = {A:"PBC手术与麻木", B:"预测模型方法", C:"rs-fMRI脑机制", D:"GBTM方法学", E:"量表与流行病"};
+const PRIORITY = [41, 8, 25, 4, 49, 50]; // 答辩重点 6 篇
+
+/* ===================== 渲染 ===================== */
+const list = document.getElementById('refList');
+
+function render(){
+  list.innerHTML = REFS.map(r=>{
+    const isPriority = PRIORITY.includes(r.num);
+    const sectionsHtml = r.sections.map(s=>`<span class="rc-sec-chip">${s}</span>`).join('');
+    return `<div class="ref-card" data-grp="${r.grp}" data-search="${(r.num+' '+r.title+' '+r.author+' '+r.borrow+' '+r.data+' '+r.sections.join(' ')).toLowerCase()}">
+      <div class="rc-head" role="button" tabindex="0" aria-expanded="false">
+        <div class="rc-head-row">
+          <div class="rc-num">${r.num}</div>
+          <div class="rc-title-wrap">
+            <div class="rc-title">${r.title}</div>
+            <div class="rc-author">${r.author} · ${r.design}</div>
+            <div class="rc-tags">
+              <span class="rc-tag grp">${GRP_NAMES[r.grp]}</span>
+              ${isPriority?`<span class="rc-tag priority">🎓 答辩重点</span>`:''}
+            </div>
+            <div class="rc-sections">${sectionsHtml}</div>
+          </div>
+          <button class="rc-toggle" aria-label="展开详情">+</button>
+        </div>
+      </div>
+      <div class="rc-body">
+        <p><span class="rc-label">🎯 对方案借鉴：</span>${r.borrow}</p>
+        <div class="rc-data"><span class="rd-label">📊 关键数据：</span>${r.data}</div>
+      </div>
+    </div>`;
+  }).join('');
+  bindToggle();
+}
+
+function bindToggle(){
+  document.querySelectorAll('.rc-head').forEach(h=>{
+    const toggle=()=>{const c=h.parentElement;c.classList.toggle('open');h.setAttribute('aria-expanded',c.classList.contains('open'));};
+    h.addEventListener('click',e=>{if(e.target.closest('.rc-toggle')||e.currentTarget===h)toggle();});
+    h.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+  });
+}
+render();
+
+/* ===================== 筛选 + 搜索 ===================== */
+let activeGrp='ALL';
+function applyFilter(){
+  const q=document.getElementById('searchInput').value.trim().toLowerCase();
+  let visible=0;
+  document.querySelectorAll('.ref-card').forEach(card=>{
+    const catOK = activeGrp==='ALL' || card.dataset.grp===activeGrp;
+    const searchOK = !q || card.dataset.search.includes(q);
+    const show = catOK && searchOK;
+    card.classList.toggle('dimmed', !show);
+    if(show) visible++;
+  });
+  const total = activeGrp==='ALL' ? REFS.length : REFS.filter(r=>r.grp===activeGrp).length;
+  const cnt = document.getElementById('resultCount');
+  if(q){
+    cnt.innerHTML = `找到 <b>${visible}</b> 篇（在 ${activeGrp==='ALL'?'全部':GRP_NAMES[activeGrp]}中搜索"${q}"）`;
+  }else{
+    cnt.innerHTML = `显示${activeGrp==='ALL'?'全部':GRP_NAMES[activeGrp]} <b>${total}</b> 篇`;
+  }
+  // 空状态
+  const empty = document.querySelector('.empty-state');
+  if(visible===0 && !empty){
+    const div=document.createElement('div');div.className='empty-state';div.id='emptyState';
+    div.innerHTML='<div class="es-icon">📭</div><p>没有匹配的文献，换个关键词试试</p>';
+    list.appendChild(div);
+  }else if(visible>0 && empty){
+    empty.remove();
+  }
+}
+
+document.querySelectorAll('.filter-chip').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-chip').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeGrp=btn.dataset.grp;
+    applyFilter();
+  });
+});
+document.getElementById('searchInput').addEventListener('input',applyFilter);
+</script>
+</body>
+</html>
