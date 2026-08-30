@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-ha-style="teaching">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>fMRI 互动课堂 · 从零看懂静息态 fMRI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#a03b00; --primary-container:#c94c00; --primary-fixed:#ffdbcd;
+  --accent-cyan:#00B8D9; --bg:#fff8f6; --surface:#fff; --surface-low:#fbf2ef;
+  --container:#f5ece9; --fg:#2b211d; --fg-muted:#8d7166;
+  --border:rgba(0,0,0,.08); --border-strong:rgba(0,0,0,.14);
+  --green:#0e9f6e; --blue:#2563eb; --yellow:#d97706; --red:#dc2626;
+  --fh:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;
+  --fb:'Plus Jakarta Sans',ui-sans-serif,system-ui,sans-serif;
+  --mono:'SF Mono','Menlo',ui-monospace,'Consolas',monospace;
+  --r-md:12px; --r-lg:16px;
+  --shadow:0 4px 12px rgba(30,27,25,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root{ --primary:#ff8a5c; --primary-container:#7c2d12; --primary-fixed:#451a03;
+    --bg:#060B18; --surface:#0d1526; --surface-low:#111c31; --container:#16233c;
+    --fg:#e7e0dc; --fg-muted:#a08d84; --border:rgba(255,255,255,.09); --border-strong:rgba(255,255,255,.2); }
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg); color:var(--fg); font-family:var(--fb); line-height:1.75; font-size:16px;}
+.wrap{max-width:1060px; margin:0 auto; padding:28px 18px 60px;}
+
+/* 头部 */
+.badge{display:inline-block; background:var(--primary-fixed); color:var(--primary);
+  font-size:12.5px; font-weight:600; letter-spacing:2px; padding:4px 14px; border-radius:999px; margin-bottom:14px;}
+@media (prefers-color-scheme: dark){ .badge{background:var(--primary-container); color:#ffb597;} }
+h1{font-family:var(--fh); font-size:clamp(26px,4.5vw,38px); line-height:1.25; margin-bottom:10px;}
+.objective{font-size:16.5px; color:var(--fg-muted); max-width:720px; margin-bottom:6px;}
+.objective b{color:var(--primary);}
+
+/* 步骤导航 */
+.rail{position:sticky; top:0; z-index:50; display:flex; gap:8px; overflow-x:auto;
+  background:var(--bg); padding:14px 0 12px; margin:22px 0 8px; border-bottom:1px solid var(--border);}
+.rail a{flex:none; text-decoration:none; color:var(--fg-muted); font-size:13.5px; font-weight:600;
+  padding:7px 14px; border-radius:999px; border:1px solid var(--border); white-space:nowrap; transition:.2s;}
+.rail a.on{background:var(--primary); color:#fff; border-color:var(--primary);}
+.rail a .n{opacity:.65; margin-right:5px; font-family:var(--fh);}
+
+/* 课程节 */
+.step{margin-top:44px;}
+.kicker{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
+.kicker .num{font-family:var(--fh); font-weight:700; font-size:13px; background:var(--primary);
+  color:#fff; border-radius:8px; padding:2px 10px;}
+.kicker .t{font-family:var(--fh); font-weight:700; font-size:23px;}
+.lede{color:var(--fg-muted); font-size:15.5px; margin-bottom:16px; max-width:780px;}
+
+.stage{background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg);
+  box-shadow:var(--shadow); padding:20px; margin-bottom:14px;}
+.stage h3{font-family:var(--fh); font-size:16px; margin-bottom:12px; display:flex; align-items:center; gap:8px;}
+canvas{width:100%; height:auto; display:block; border-radius:10px; background:var(--surface-low); border:1px solid var(--border);}
+.ctrl{display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:14px 0 6px;}
+button{font-family:var(--fb); font-size:14px; font-weight:600; color:#fff; background:var(--primary);
+  border:none; border-radius:10px; padding:9px 18px; cursor:pointer; transition:.15s;}
+button:hover{filter:brightness(1.08);}
+button.ghost{background:transparent; color:var(--primary); border:1.5px solid var(--primary);}
+button.ghost.on, .chip.on{background:var(--primary); color:#fff;}
+.chip{background:transparent; color:var(--fg-muted); border:1.5px solid var(--border-strong);}
+input[type=range]{flex:1; min-width:160px; accent-color:var(--primary);}
+.readout{font-family:var(--mono); font-size:13.5px; background:var(--container); border-radius:8px; padding:6px 12px;}
+.note{font-size:13.5px; color:var(--fg-muted); margin-top:10px;}
+.note b{color:var(--primary);}
+
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin-top:14px;}
+.card{background:var(--surface-low); border:1px solid var(--border); border-radius:var(--r-md); padding:14px 16px;}
+.card h4{font-family:var(--fh); font-size:14.5px; margin-bottom:6px;}
+.card p{font-size:13.8px; color:var(--fg); opacity:.92;}
+.card .why{margin-top:8px; font-size:12.5px; color:var(--fg-muted); border-top:1px dashed var(--border); padding-top:8px;}
+.card .why b{color:var(--primary);}
+
+/* 流水线 */
+.pipe{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;}
+.warn{background:var(--primary-fixed); border-radius:10px; padding:10px 14px; font-size:13.5px; color:var(--primary); margin-top:12px;}
+@media (prefers-color-scheme: dark){ .warn{color:#ffb597;} }
+
+/* 脑图查看器 */
+.viewer{display:grid; grid-template-columns:1fr 290px; gap:16px;}
+@media (max-width:820px){ .viewer{grid-template-columns:1fr;} }
+.slices{display:flex; gap:8px; justify-content:center; flex-wrap:wrap;}
+.slicefig{width:31%; min-width:150px; text-align:center;}
+.slicefig svg{width:100%; height:auto; background:var(--surface-low); border:1px solid var(--border); border-radius:10px; cursor:crosshair;}
+.slicefig .zlab{font-size:12px; color:var(--fg-muted); font-family:var(--mono); margin-top:4px;}
+.info{background:var(--surface-low); border:1px solid var(--border); border-radius:var(--r-md); padding:14px 16px; font-size:14px;}
+.info h4{font-family:var(--fh); font-size:14px; margin-bottom:8px; color:var(--primary);}
+.info table{width:100%; border-collapse:collapse; font-size:12.8px;}
+.info td{padding:5px 4px; border-bottom:1px dashed var(--border); vertical-align:top;}
+.info td:first-child{color:var(--fg-muted); white-space:nowrap; padding-right:8px;}
+.legend{display:flex; gap:14px; align-items:center; margin-top:10px; font-size:12.5px; color:var(--fg-muted); flex-wrap:wrap;}
+.lg{display:flex; align-items:center; gap:5px;}
+.lg i{width:13px; height:13px; border-radius:3px; display:inline-block;}
+
+/* 自测 */
+.q{background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:16px 18px; margin-bottom:12px;}
+.q .qt{font-weight:600; margin-bottom:10px;}
+.q .opt{display:block; width:100%; text-align:left; background:var(--surface-low); color:var(--fg);
+  border:1px solid var(--border); border-radius:9px; padding:9px 13px; font-size:14px; font-weight:500; margin-bottom:7px;}
+.q .opt:hover{border-color:var(--primary);}
+.q .opt.right{background:#e7f7ef; border-color:var(--green); color:#065f46;}
+.q .opt.wrong{background:#fdecec; border-color:var(--red); color:#7f1d1d;}
+.q .exp{display:none; font-size:13.5px; background:var(--surface-low); border-left:3px solid var(--primary);
+  padding:8px 12px; border-radius:0 8px 8px 0; margin-top:6px;}
+@media (prefers-color-scheme: dark){ .q .opt.right{background:#0b2e21; color:#a7f3d0;} .q .opt.wrong{background:#2e0b0b; color:#fecaca;} }
+.score{font-family:var(--fh); font-size:15px; margin-top:6px;}
+
+/* 总结 */
+.recap{background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px 22px; margin-top:16px;}
+.recap h3{font-family:var(--fh); margin-bottom:12px;}
+.recap li{margin:7px 0 7px 18px; font-size:14.8px;}
+.mis{background:var(--primary-fixed); border-radius:10px; padding:10px 14px; font-size:14px; color:var(--primary); margin-top:12px;}
+@media (prefers-color-scheme: dark){ .mis{color:#ffb597;} }
+.next{margin-top:12px; font-size:14.5px;}
+footer{margin-top:40px; text-align:center; font-size:12.5px; color:var(--fg-muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="badge">医学科普 · 互动课堂 · 静息态 fMRI</span>
+  <h1>fMRI 互动课堂：<br>从零看懂静息态 fMRI 研究</h1>
+  <p class="objective">学完本页，你将能：<b>说清 fMRI 测的是什么信号</b>、看懂 ALFF / ReHo / 功能连接三大指标、以及<b>独立读懂一篇 fMRI 论文里的脑图和结果表</b>。全程可拖、可点、可自测。</p>
+</header>
+
+<nav class="rail" id="rail">
+  <a href="#s1" class="on"><span class="n">1</span>BOLD 原理</a>
+  <a href="#s2"><span class="n">2</span>静息态是什么</a>
+  <a href="#s3"><span class="n">3</span>预处理流水线</a>
+  <a href="#s4"><span class="n">4</span>三大指标</a>
+  <a href="#s5"><span class="n">5</span>读懂论文脑图</a>
+  <a href="#s6"><span class="n">6</span>自测与小结</a>
+</nav>
+
+<!-- ============ 1 BOLD ============ -->
+<section class="step" id="s1">
+  <div class="kicker"><span class="num">1</span><span class="t">fMRI 到底测的是什么信号？</span></div>
+  <p class="lede">fMRI 不是给大脑"拍照"，而是每 2 秒左右采一次"电影帧"。它测的是 <b>BOLD 信号</b>——血氧水平依赖信号。点下面的按钮，注意观察两条曲线的<strong>时间差</strong>。</p>
+  <div class="stage">
+    <h3>🎬 实验：神经活动 vs BOLD 信号（血动力学的滞后）</h3>
+    <canvas id="c1" width="900" height="260"></canvas>
+    <div class="ctrl">
+      <button id="stim">⚡ 给一次刺激（神经元放电）</button>
+      <button id="stimReset" class="ghost">重置</button>
+      <span class="readout" id="c1read">还没给刺激</span>
+    </div>
+    <p class="note"><b>注意</b>：蓝线（神经活动）瞬间完成；橙线（BOLD）要<b>滞后 4–6 秒</b>才慢慢爬升、10 秒后回落——因为大脑靠"多送新鲜血液"来补偿氧耗，血流响应天生是慢动作。<b>这很关键</b>：fMRI 的时间分辨率是"秒级"，远慢于脑电，但空间分辨率能到毫米级。</p>
+  </div>
+  <div class="cards">
+    <div class="card"><h4>🩸 原理一句话</h4><p>神经元活跃 → 消耗氧气 → 身体补偿性输送<strong>富氧血</strong> → 局部脱氧血红蛋白比例下降 → 磁共振信号（T2*）增强。</p><div class="why"><b>为什么这很关键：</b>我们测的是<strong>血氧变化的间接信号</strong>，不是神经放电本身。</div></div>
+    <div class="card"><h4>🗺️ 输出是什么</h4><p>全脑几十万个"体素"（立体小方块，约 3mm³）每个都有一条随时间变化的信号曲线，后续所有分析都是在比这些曲线。</p><div class="why"><b>记住：</b>论文脑图上的颜色 = 每个体素统计量的高低。</div></div>
+  </div>
+</section>
+
+<!-- ============ 2 静息态 ============ -->
+<section class="step" id="s2">
+  <div class="kicker"><span class="num">2</span><span class="t">静息态：让被试"躺着什么都不做"</span></div>
+  <p class="lede">fMRI 分两种玩法：<b>任务态</b>（让被试做任务，看哪些脑区被激活）和<b>静息态 rs-fMRI</b>（闭眼放松平躺 6–10 分钟，只记录自发波动）。切换按钮对比两者的信号。</p>
+  <div class="stage">
+    <h3>🎬 对比：任务态 vs 静息态的时间曲线</h3>
+    <canvas id="c2" width="900" height="240"></canvas>
+    <div class="ctrl">
+      <button id="modeTask" class="on">任务态（方块设计）</button>
+      <button id="modeRest" class="ghost">静息态（自发波动）</button>
+      <span class="readout" id="c2read">任务态：看"哪些脑区跟着任务开关"</span>
+    </div>
+    <p class="note"><b>注意</b>：静息态并非"没有信号"——大脑即使放松也在进行有节律的<strong>低频自发波动</strong>（0.01–0.1 Hz，一个波约 10–100 秒）。这些波动的<strong>幅度</strong>和<strong>区域间同步性</strong>，就是下一步三大指标的原料。</p>
+  </div>
+  <div class="cards">
+    <div class="card"><h4>😌 为什么疼痛研究偏爱静息态</h4><p>慢性疼痛患者往往难以配合复杂任务；静息态只需躺着，数据还能反映疾病的"底状态"（基线脑活动改变）。</p><div class="why"><b>举例：</b>特发性三叉神经痛的 ALFF/ReHo 研究（Yuan 2018）用的就是静息态。</div></div>
+    <div class="card"><h4>⏱️ 扫描的现实要求</h4><p>时长 6–10 分钟；要求被试闭眼、保持不动、别睡着。头动是静息态数据的头号敌人（下一站处理它）。</p><div class="why"><b>常见阈值：</b>头动位移 &gt; 0.5 mm 或转动 &gt; 0.5° 的帧会被标记甚至剔除。</div></div>
+  </div>
+</section>
+
+<!-- ============ 3 预处理 ============ -->
+<section class="step" id="s3">
+  <div class="kicker"><span class="num">3</span><span class="t">预处理流水线：把"脏信号"洗干净</span></div>
+  <p class="lede">原始信号混杂着机器噪声、头动、呼吸心跳漂移。所有 fMRI 研究都要先过同一条"洗菜流水线"（DPARSF/SPM12 就是这条线的自动化工具）。<b>逐个点下面的步骤</b>，看曲线如何一步步变干净。</p>
+  <div class="stage">
+    <h3>🎬 流水线（点击步骤切换）</h3>
+    <div class="pipe" id="pipe">
+      <button class="chip on" data-i="0">1. 时间层校正</button>
+      <button class="chip" data-i="1">2. 头动校正</button>
+      <button class="chip" data-i="2">3. 标准化 MNI</button>
+      <button class="chip" data-i="3">4. 平滑</button>
+      <button class="chip" data-i="4">5. 去噪</button>
+      <button class="chip" data-i="5">6. 滤波 0.01–0.1 Hz</button>
+    </div>
+    <canvas id="c3" width="900" height="230"></canvas>
+    <p class="note" id="pipeText"></p>
+  </div>
+  <div class="cards">
+    <div class="card"><h4>🧭 两条铁律</h4><p>①头动校正时会把头动参数记下来，之后作为噪声回归掉；②被试头动过大（如平均位移 &gt;0.5 mm）通常整个剔除。</p><div class="why"><b>为什么：</b>头动会产生与"病例-对照分组"相关的假信号，是 fMRI 假结论的头号来源。</div></div>
+    <div class="card"><h4>🌍 MNI 标准脑</h4><p>每颗大脑形状不同，标准化就是把所有人的脑"拉齐"到同一个标准坐标空间，才能做组间比较和报坐标。</p><div class="why"><b>记住：</b>论文里的坐标 (x,y,z) 都是 MNI 空间坐标。</div></div>
+  </div>
+</section>
+
+<!-- ============ 4 三大指标 ============ -->
+<section class="step" id="s4">
+  <div class="kicker"><span class="num">4</span><span class="t">三大指标：ALFF、ReHo、功能连接</span></div>
+  <p class="lede">洗干净之后，每个研究都要选一个"视角"总结信号。切换下面四个标签，<b>每个都配了可以拖的滑块</b>——先猜再拖，看曲线怎么变。</p>
+  <div class="stage">
+    <h3>🎬 指标切换台</h3>
+    <div class="ctrl" style="margin-top:0;">
+      <button class="chip on" data-m="alff">ALFF 活跃度</button>
+      <button class="chip" data-m="falff">fALFF 低频占比</button>
+      <button class="chip" data-m="reho">ReHo 局部同步</button>
+      <button class="chip" data-m="fc">功能连接 FC</button>
+    </div>
+    <canvas id="c4" width="900" height="250"></canvas>
+    <div class="ctrl">
+      <span id="m4sliderLabel">活跃度</span>
+      <input type="range" id="m4slider" min="0" max="100" value="55">
+      <span class="readout" id="m4read"></span>
+    </div>
+    <p class="note" id="m4note"></p>
+  </div>
+  <div class="cards">
+    <div class="card"><h4>📍 ALFF（低频振幅）</h4><p>每个体素 0.01–0.1 Hz 波动的<strong>总幅度</strong> → "这个脑区有多活跃"。<br><b>TN 研究：</b>患者岛叶/丘脑等痛觉区 ALFF 异常（Yuan 2018）。</p></div>
+    <div class="card"><h4>🔗 ReHo（局部一致性）</h4><p>一个体素与<strong>紧邻邻居</strong>们步调是否一致 → "局部小团队协不协调"。<br><b>TN 研究：</b>患者感觉运动区 ReHo 改变。</p></div>
+    <div class="card"><h4>🤝 功能连接 FC</h4><p>两个<strong>远距离</strong>脑区曲线的相关系数 r（−1~1）→ "它们是否协同工作"。<br><b>TN 研究：</b>岛叶-全脑连接异常（Chen 2025）。</p></div>
+    <div class="card"><h4>🎚️ fALFF（低频占比）</h4><p>低频段（0.01–0.1 Hz）能量占全频段的比例，用来排除呼吸心跳噪声，是 ALFF 的"改进版"。</p></div>
+  </div>
+</section>
+
+<!-- ============ 5 读懂论文脑图 ============ -->
+<section class="step" id="s5">
+  <div class="kicker"><span class="num">5</span><span class="t">实战：看懂 fMRI 论文的脑图和结果表</span></div>
+  <p class="lede">这是本课的终点目标。下面是一个<b>模拟的"病例 vs 对照"统计脑图</b>（三张横断面切片，红黄=病例组升高，蓝=降低）。<b>先拖阈值滑块，再打开校正开关</b>，点彩色团块查看信息。</p>
+  <div class="stage">
+    <h3>🎬 模拟脑图查看器（示意图，非真实数据）</h3>
+    <div class="ctrl">
+      <span>统计阈值 p</span>
+      <input type="range" id="pthr" min="0" max="100" value="20">
+      <span class="readout" id="pthrRead">p &lt; 0.05（未校正）</span>
+      <button id="corrBtn" class="ghost">多重比较校正：关</button>
+    </div>
+    <div class="viewer">
+      <div>
+        <div class="slices" id="slices"></div>
+        <div class="legend">
+          <span>颜色条：</span>
+          <span class="lg"><i style="background:linear-gradient(90deg,#2166ac,#67a9cf,#f7f7f7,#f4a582,#b2182b)"></i> t 值 −6 → +6</span>
+          <span class="lg"><i style="background:#b2182b"></i>病例组升高</span>
+          <span class="lg"><i style="background:#2166ac"></i>病例组降低</span>
+          <span>点击彩色团块查看信息 →</span>
+        </div>
+      </div>
+      <div class="info">
+        <h4 id="infoTitle">👆 点击左侧任意彩色团块</h4>
+        <table id="infoTable"><tr><td>提示</td><td>每个色斑 = 一团满足阈值的体素；论文里会报它的脑区名、坐标、体素数和峰值 t 值。</td></tr></table>
+      </div>
+    </div>
+    <div class="warn">⚠️ 做一做再读：把阈值从 0.05 拖到 0.001（不校正），假阳性斑点明显变少；再打开"校正"，只有<strong>真正强</strong>的团块存活——这就是为什么论文方法里总写着 "p &lt; 0.001, GRF/FWE 校正, 簇 &gt; 21 体素"：<b>全脑要比较几万个体素，不校正的话满屏都是假阳性</b>。</div>
+  </div>
+  <div class="stage">
+    <h3>📋 论文结果表怎么读（典型样式）</h3>
+    <table class="card" style="width:100%; border-collapse:collapse; font-size:13.5px;">
+      <tr style="text-align:left; color:var(--fg-muted);"><th style="padding:7px 9px;">脑区</th><th>BA 区</th><th>MNI 坐标 (x,y,z)</th><th>体素数</th><th>峰值 t</th></tr>
+      <tr><td style="padding:7px 9px;">左侧岛叶</td><td>13</td><td style="font-family:var(--mono);">−38, 8, 12</td><td>87</td><td>4.92</td></tr>
+      <tr><td style="padding:7px 9px;">右侧丘脑</td><td>—</td><td style="font-family:var(--mono);">12, −18, 8</td><td>54</td><td>4.31</td></tr>
+    </table>
+    <p class="note"><b>读表四步</b>：①看"脑区"知道是哪；②坐标判断大致位置（x 负=左半球）；③体素数=团块大小=可靠性；④t 值=信号强度。三个数都要在阈值校正通过后才有效。</p>
+  </div>
+  <div class="cards">
+    <div class="card"><h4>🧠 疼痛研究常见脑区速查</h4><p><b>岛叶</b>—痛觉整合中心；<b>丘脑</b>—感觉中继站；<b>S1 中央后回</b>—身体感觉定位；<b>ACC 前扣带回</b>—痛的情绪维度；<b>默认模式网络</b>—静息态的主角们。</p><div class="why"><b>用得上：</b>读 TN 文献时，看到这些区被报出来，先想"它在痛觉通路里干嘛"，再看方向（升高/降低）。</div></div>
+    <div class="card"><h4>📐 坐标怎么读</h4><p>MNI 坐标三个数：<b>x</b> 左右（负=左半球）、<b>y</b> 前后（负=靠后）、<b>z</b> 高低。<br><b>例：</b>(−8, 20, 32) 在左侧、偏前、偏高 → 大概是前扣带回/内侧额叶。</p></div>
+  </div>
+</section>
+
+<!-- ============ 6 自测 ============ -->
+<section class="step" id="s6">
+  <div class="kicker"><span class="num">6</span><span class="t">自测：6 题检查你学会了没</span></div>
+  <p class="lede">点选项立即判分。全对的话，你已经能看懂大部分 rs-fMRI 论文的方法和图了。</p>
+  <div id="quiz"></div>
+  <div class="recap">
+    <h3>📌 三句话带走</h3>
+    <li>fMRI 测的是<strong>血氧（BOLD）间接信号</strong>，秒级时间分辨率、毫米级空间分辨率。</li>
+    <li>静息态研究的三大常用指标：<strong>ALFF</strong>（局部活跃度）、<strong>ReHo</strong>（局部同步性）、<strong>FC</strong>（区域间相关性）。</li>
+    <li>看论文脑图先问三件事：<strong>校正了吗？阈值多少？坐标在哪个脑区？</strong></li>
+    <div class="mis"> ❌ 常见误解：脑图上的彩色区域是"大脑的照片"。其实它们是<strong>统计结果叠加在标准脑模板上</strong>，颜色代表统计量的高低，而且只在通过校正后才有意义。</div>
+    <p class="next">🎯 下一步：①精读课题组文献 #26（Yuan 2018，TN 的 ALFF/ReHo 研究），对照本课逐一找出它的指标、校正方法和脑图结论；②安装 DPARSF，用公开数据集 ds005713 跑一遍全流程（见《学习笔记-GitHub工具与数据资源》）。</p>
+  </div>
+</section>
+
+<footer>本页为教学示意页：所有脑图与曲线均为模拟数据，不代表真实研究结果。引用文献见课题组文献库（#23、#25、#26、#31 等）。生成：ZCode，2026-08-30。</footer>
+</div>
+
+<script>
+/* ============ 工具 ============ */
+const TAU = Math.PI*2;
+function $(s){return document.querySelector(s);}
+function $$(s){return document.querySelectorAll(s);}
+function fitCanvas(c){ const dpr = window.devicePixelRatio||1; const w = c.clientWidth||900;
+  if(!c.dataset.w){ c.dataset.w=c.width; c.dataset.h=c.height; }
+  c.style.width='100%'; }
+function draw(ctx,fn){ fn(ctx); }
+function bgGrid(ctx,W,H){ ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='rgba(128,128,128,.14)'; ctx.lineWidth=1;
+  for(let x=0;x<=W;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<=H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();} }
+function curve(ctx,pts,color,width){ ctx.strokeStyle=color; ctx.lineWidth=width||2.5;
+  ctx.beginPath(); pts.forEach((p,i)=>{ i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]); }); ctx.stroke(); }
+function label(ctx,txt,x,y,color){ ctx.fillStyle=color||'#8d7166'; ctx.font='13px "Plus Jakarta Sans",sans-serif'; ctx.fillText(txt,x,y); }
+
+/* ============ 1 BOLD 演示 ============ */
+(function(){
+  const c=$('#c1'), ctx=c.getContext('2d'); const W=c.width,H=c.height;
+  let stims=[], animStart=null;
+  function hrf(t){ if(t<=0) return 0; return Math.pow(t/5.2,3)*Math.exp(-(t-5.2)/1.4); } // 简化 HRF（峰值≈1 @5.2s）
+  function render(){
+    bgGrid(ctx,W,H);
+    const x0=70, x1=W-30, y0=30, y1=H-45, span=x1-x0, tMax=20;
+    ctx.strokeStyle='#8d7166'; ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x0,y1); ctx.lineTo(x1,y1); ctx.stroke();
+    const X=t=>x0+span*t/tMax, Y=v=>y1-(v)*(y1-y0)*0.8;
+    // 神经活动脉冲
+    const npts=[]; for(let t=0;t<=tMax;t+=0.05){ let v=0; stims.forEach(s=>{ if(Math.abs(t-s)<0.25) v=1;}); npts.push([X(t),Y(v)]); }
+    curve(ctx,npts,'#2563eb',2);
+    // BOLD
+    const bpts=[]; for(let t=0;t<=tMax;t+=0.05){ let v=0; stims.forEach(s=>v+=hrf(t-s)); bpts.push([X(t),Y(v)]); }
+    curve(ctx,bpts,'#c94c00',3.5);
+    label(ctx,'神经活动（蓝）',x0+8,y0+16,'#2563eb');
+    label(ctx,'BOLD 信号（橙）·滞后 4–6 秒',x0+150,y0+16,'#c94c00');
+    label(ctx,'时间（秒）→',x1-95,y1+30);
+    if(stims.length){ const last=stims[stims.length-1];
+      ctx.strokeStyle='rgba(0,0,0,.25)'; ctx.setLineDash([4,4]);
+      ctx.beginPath(); ctx.moveTo(X(last),y0); ctx.lineTo(X(last),y1); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(X(last+5.2),y0); ctx.lineTo(X(last+5.2),y1); ctx.stroke();
+      ctx.setLineDash([]);
+      label(ctx,'峰≈5.2 秒后',X(last+5.2)+8,y0+58,'#2b211d');
+    }
+  }
+  $('#stim').onclick=()=>{ const t=(stims.length? stims[stims.length-1]+6 : 2); if(t<=17){ stims.push(t);
+    $('#c1read').textContent='已给 '+stims.length+' 次刺激 · 看 BOLD 是否晚到 ~5 秒'; } render(); };
+  $('#stimReset').onclick=()=>{ stims=[]; $('#c1read').textContent='还没给刺激'; render(); };
+  stims=[2]; $('#c1read').textContent='已预置 1 次刺激 · 继续点按钮可叠加'; render();   // 初始预置一次刺激，便于第一眼对照
+})();
+
+/* ============ 2 任务态 vs 静息态 ============ */
+(function(){
+  const c=$('#c2'), ctx=c.getContext('2d'); const W=c.width,H=c.height;
+  let mode='task';
+  function render(){
+    bgGrid(ctx,W,H); const x0=60,x1=W-25,y0=25,y1=H-40,span=x1-x0,yh=y1-y0;
+    ctx.strokeStyle='#8d7166'; ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x0,y1); ctx.lineTo(x1,y1); ctx.stroke();
+    const pts=[],X=t=>x0+span*t/240;
+    if(mode==='task'){
+      // 方块任务 + HRF 响应
+      for(let t=0;t<=240;t+=0.5){ const on=(Math.floor(t/30)%2===0)?1:0;
+        let bold=0; for(let k=0;k<8;k++){ const s=k*30; if(t>=s) bold+=(on?1:0)*0+((Math.floor(t/30)===k)?on:0)*hrf2(t-s); }
+        pts.push([X(t), y1-bold*yh*0.75]); }
+      function hrf2(t){ if(t<0) return 0; return Math.pow(t/5.2,3)*Math.exp(-t/1.1); }
+      // 重画：直接生成 bold 曲线
+      pts.length=0;
+      for(let t=0;t<=240;t+=0.5){ let b=0; const blk=Math.floor(t/30); const on=blk%2===0?1:0;
+        const s=blk*30; b=on*Math.pow((t-s)/5.2,3)*Math.exp(-((t-s)-5.2)/1.4);
+        pts.push([X(t), y1-b*yh*0.75]); }
+      curve(ctx,pts,'#c94c00',3);
+      for(let k=0;k<8;k++){ if(k%2===0){ ctx.fillStyle='rgba(37,99,235,.12)'; ctx.fillRect(X(k*30),y0,span*30/240,yh); } }
+      label(ctx,'蓝色底纹=执行任务时段（30s 开 / 30s 关）',x0+10,y0+16,'#2563eb');
+      label(ctx,'橙色=BOLD 跟着任务开关起伏（滞后）',x0+10,y0+36,'#c94c00');
+    } else {
+      // 静息态：低频随机游走
+      let v=0.5; for(let t=0;t<=240;t+=0.5){
+        v+= (Math.random()-0.5)*0.02;
+        v = 0.995*v + 0.005*0.5 + Math.sin(t/38)*0.012;
+        pts.push([X(t), y1-Math.min(0.95,Math.max(0.05,v))*yh]); }
+      curve(ctx,pts,'#0e9f6e',2.2);
+      label(ctx,'绿色=闭眼静息时的自发低频波动（0.01–0.1 Hz，缓慢起伏）',x0+10,y0+16,'#0e9f6e');
+      label(ctx,'它没有外部任务驱动——但幅度和同步性本身就携带信息',x0+10,y0+36);
+    }
+    label(ctx,'时间（秒）→',x1-95,y1+30);
+  }
+  $('#modeTask').onclick=()=>{ mode='task'; $('#modeTask').classList.add('on'); $('#modeRest').classList.remove('on');
+    $('#c2read').textContent='任务态：看"哪些脑区跟着任务开关"'; render(); };
+  $('#modeRest').onclick=()=>{ mode='rest'; $('#modeRest').classList.add('on'); $('#modeTask').classList.remove('on');
+    $('#c2read').textContent='静息态：闭眼 6–10 分钟，只记录自发波动'; render(); };
+  render(); window.addEventListener('resize',()=>render());
+})();
+
+/* ============ 3 流水线 ============ */
+(function(){
+  const c=$('#c3'), ctx=c.getContext('2d'); const W=c.width,H=c.height;
+  const texts=[
+    '1️⃣ 时间层校正：整脑是一层一层扫出来的（几十毫秒差），先把每层的时间对齐——保证"同一帧"真的是同一时刻。',
+    '2️⃣ 头动校正：把每一帧对齐到第一帧（人不可能绝对不动）。头动参数会被记录，之后作为噪声回归掉；头动太大的被试整个剔除。',
+    '3️⃣ 标准化（MNI）：把每个人的脑拉伸对齐到标准模板脑，之后才能做组间平均、报统一坐标。',
+    '4️⃣ 平滑：让相邻体素共享信息、提高信噪比（代价是牺牲一点空间细节）。',
+    '5️⃣ 去噪：把头动参数、白质/脑脊液信号、呼吸心跳漂移作为协变量回归掉，再剔除异常帧。',
+    '6️⃣ 滤波（0.01–0.1 Hz）：只保留静息态感兴趣的低频波动，滤掉高频噪声和极慢漂移——到此，数据"干净"了。'];
+  const stepIdx = {0:0,1:1,2:2,3:3,4:4,5:5};
+  function render(level){
+    bgGrid(ctx,W,H); const x0=55,x1=W-25,y0=25,y1=H-40,span=x1-x0,yh=y1-y0;
+    ctx.strokeStyle='#8d7166'; ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x0,y1); ctx.lineTo(x1,y1); ctx.stroke();
+    function raw(t){ return 0.5 + 0.10*Math.sin(t/34) + 0.03*Math.sin(t/9) + (Math.random()-0.5)*0.05 + 0.0008*(t-120); }
+    const pts=[];
+    for(let t=0;t<=240;t+=0.5){
+      let v = raw(t);
+      if(level>=2) v = 0.5 + 0.10*Math.sin(t/34) + 0.03*Math.sin(t/9) + 0.0008*(t-120) + (Math.random()-0.5)*0.012;
+      if(level>=5) v = 0.5 + 0.10*Math.sin(t/34) + 0.0008*0*(t-120);
+      pts.push([x0+span*t/240, y1-(v-0.15)*yh*1.05]);
+    }
+    curve(ctx,pts,'#0e9f6e',2.2);
+    label(ctx,'信号时间曲线（示意）·当前步骤：第 '+(level+1)+' 步之后',x0+10,y0+16);
+  }
+  $$('#pipe .chip').forEach(btn=>{ btn.onclick=()=>{
+    $$('#pipe .chip').forEach(b=>b.classList.remove('on')); btn.classList.add('on');
+    const i=+btn.dataset.i; $('#pipeText').textContent=texts[i]; render(i); }; });
+  $('#pipeText').textContent=texts[0]; render(0);
+})();
+
+/* ============ 4 指标切换台 ============ */
+(function(){
+  const c=$('#c4'), ctx=c.getContext('2d'); const W=c.width,H=c.height;
+  let mode='alff', slider=55;
+  const meta={
+    alff:{lab:'活跃度（波动幅度）', note:'ALFF = 这个体素低频波动的总幅度。滑块向右→曲线振幅变大→ALFF 值升高→脑图上更"红"。论文里比较患者 vs 对照某脑区的 ALFF，就是比较这里的振幅。'},
+    falff:{lab:'低频占比', note:'fALFF = 低频（0.01–0.1 Hz）能量占全频段比例。滑块向右→曲线越来越"慢而稳"（低频成分占比高）；向左→充满高频毛刺（更像噪声）。它能排除呼吸心跳的干扰。'},
+    reho:{lab:'邻居同步性', note:'ReHo = 一个体素与相邻体素曲线的同步程度（KCC）。滑块向右→绿、橙、蓝三条曲线越来越同步→ReHo 升高→"局部小团队协作增强"。'},
+    fc:{lab:'与丘脑的相关 r', note:'功能连接 FC = 两个区域时间序列的相关系数 r（−1 ~ +1）。滑块向右→两曲线越来越同相（r→1，正相关）；拖到最左→反相（r→−1，负相关）。论文里的"连接增强/减弱"就是比 r。'}
+  };
+  function curvesFor(){
+    const pts1=[],pts2=[],pts3=[],sc=[];
+    const N=440;
+    const slow = mode==='falff' ? slider/100 : 0.8;
+    for(let i=0;i<N;i++){
+      const t=i;
+      let v;
+      if(mode==='alff'){ const amp=0.12+slider/100*0.34; v=0.5+amp*Math.sin(t/26)+0.04*Math.sin(t/7); }
+      else if(mode==='falff'){ const hi=(1-slow); v=0.5+0.16*Math.sin(t/30)*slow*2+hi*0.06*Math.sin(t/3.3); }
+      else if(mode==='reho'){ const sync=slider/100; const base=0.5+0.18*Math.sin(t/24);
+        v=base; }
+      else { const r=(slider/100)*2-1; }
+      pts1.push(v);
+    }
+    // ReHo / FC 需要多条曲线
+    const sync=slider/100, r=(slider/100)*2-1;
+    for(let i=0;i<N;i++){ const t=i;
+      const x=0.5+0.18*Math.sin(t/24)+0.02*Math.sin(t/6);
+      const y=0.5+r*0.18*Math.sin(t/24)+Math.sqrt(Math.max(0.02,1-r*r))*0.07*Math.sin(t/5+1);
+      const n1=x+(1-sync)*0.09*Math.sin(t/5)+ (1-sync)*0.05*(Math.random()-0.5);
+      const n2=x+(1-sync)*0.09*Math.cos(t/4.2)+(1-sync)*0.05*(Math.random()-0.5);
+      pts2.push([x,y]); pts3.push([n1,n2]);
+    }
+    return {pts1,pts2,pts3};
+  }
+  function render(){
+    bgGrid(ctx,W,H); const x0=55,x1=W-25,y0=22,y1=H-38,span=x1-x0,yh=y1-y0;
+    ctx.strokeStyle='#8d7166'; ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x0,y1); ctx.lineTo(x1,y1); ctx.stroke();
+    const X=i=>x0+span*i/(440-1), Y=v=>y1-Math.min(0.98,Math.max(0.02,v))*yh;
+    if(mode==='reho'||mode==='fc'){
+      const {pts2,pts3}=curvesFor();
+      if(mode==='reho'){
+        curve(ctx,pts3.map((p,i)=>[X(i),Y(p[0])]),'#2563eb',1.8);
+        curve(ctx,pts3.map((p,i)=>[X(i),Y(p[1])]),'#f59e0b',1.8);
+        curve(ctx,pts2.map((p,i)=>[X(i),Y(p[0])]),'#0e9f6e',2.6);
+        label(ctx,'绿=中心体素 蓝/橙=相邻体素（同步性随滑块变化）',x0+10,y0+16);
+        $('#m4read').textContent='ReHo(示意) = '+(0.2+slider/100*0.75).toFixed(2);
+      } else {
+        curve(ctx,pts2.map((p,i)=>[X(i),Y(p[0])]),'#2563eb',2.4);
+        curve(ctx,pts2.map((p,i)=>[X(i),Y(p[1])]),'#c94c00',2.4);
+        label(ctx,'蓝=区域A时间序列 橙=区域B时间序列',x0+10,y0+16);
+        const r=((slider/100)*2-1);
+        $('#m4read').textContent='r = '+r.toFixed(2)+(r>0.3?' 正相关：同涨同落':(r<-0.3?' 负相关：此涨彼落':' 接近 0：没什么关系'));
+      }
+    } else {
+      const {pts1}=curvesFor();
+      curve(ctx,pts1.map((v,i)=>[X(i),Y(v)]),mode==='alff'?'#c94c00':'#0e9f6e',2.6);
+      if(mode==='alff'){ label(ctx,'曲线振幅 = ALFF（活跃度）',x0+10,y0+16);
+        $('#m4read').textContent='ALFF(示意) = '+(0.15+slider/100*0.85).toFixed(2);
+      } else { label(ctx,'低频占比高=慢而稳 / 低=毛刺多（高频噪声）',x0+10,y0+16);
+        $('#m4read').textContent='fALFF(示意) = '+(slider/100).toFixed(2); }
+    }
+    label(ctx,'时间 →',x1-70,y1+28);
+  }
+  $('#m4slider').oninput=e=>{ slider=+e.target.value; $('#m4sliderLabel').textContent=meta[mode].lab; $('#m4note').textContent=meta[mode].note; render(); };
+  $$('#s4 .chip').forEach(b=>{ b.onclick=()=>{ $$('#s4 .chip').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+    mode=b.dataset.m; $('#m4sliderLabel').textContent=meta[mode].lab; $('#m4note').textContent=meta[mode].note; render(); }; });
+  $('#m4note').textContent=meta.alff.note; render();
+})();
+
+/* ============ 5 脑图查看器 ============ */
+(function(){
+  const W=300,H=260;
+  const slices=[
+    {key:'up', z:'z = +32（上层）', clusters:[
+      {cx:150,cy:78,rr:26,region:'前扣带回（ACC）',mni:'−6, 18, 32',vox:63,t:4.8,cond:'alffUp',strong:true},
+      {cx:96,cy:150,rr:11,region:'左额下回',mni:'−44, 26, 30',vox:9,t:2.4,cond:'alffUp',strong:false},
+      {cx:210,cy:88,rr:9,region:'右额中回',mni:'40, 30, 34',vox:7,t:2.1,cond:'alffUp',strong:false}]},
+    {key:'mid', z:'z = 0（中层）', clusters:[
+      {cx:112,cy:118,rr:24,region:'左侧岛叶',mni:'−38, 8, 6',vox:87,t:4.9,cond:'alffUp',strong:true},
+      {cx:150,cy:112,rr:18,region:'丘脑',mni:'0, −14, 4',vox:52,t:3.9,cond:'fcUp',strong:true},
+      {cx:196,cy:126,rr:20,region:'右侧中央后回（S1）',mni:'52, −22, 18',vox:44,t:3.4,cond:'alffDown',strong:true},
+      {cx:70,cy:170,rr:8,region:'左颞中回',mni:'−60, −30, 2',vox:6,t:1.9,cond:'alffUp',strong:false}]},
+    {key:'low', z:'z = −20（下层）', clusters:[
+      {cx:150,cy:150,rr:12,region:'小脑前叶',mni:'2, −52, −20',vox:11,t:2.3,cond:'alffDown',strong:false},
+      {cx:104,cy:120,rr:9,region:'左海马旁回',mni:'−26, −20, −18',vox:5,t:1.8,cond:'fcUp',strong:false}]}
+  ];
+  let metric='alffUp', corrected=false, plev=20; // plev: 0=0.05 最松, 100=0.001 最严
+  const metricName={alffUp:'病例组 ALFF 升高', alffDown:'病例组 ALFF 降低', fcUp:'病例组功能连接升高'};
+  function tColor(t){ // t 1.8..5 映射蓝白红
+    const v=Math.max(-1,Math.min(1,(t-1.8)/(5-1.8)));
+    if(metric.includes('Down')){ const r=Math.round(33+ v*(181-33)); const g=Math.round(102+(24-102)*v); const b=Math.round(172+(43-172)*v); return 'rgb('+r+','+g+','+b+')'; }
+    const r=Math.round(247+(178-247)*v), g=Math.round(165+(24-165)*v), b=Math.round(130+(43-130)*v);
+    return 'rgb('+r+','+g+','+b+')';
+  }
+  function pCut(){ return 0.05 - (plev/100)*(0.05-0.001); } // 0.05→0.001
+  function visible(cl){ if(cl.cond!==metric) return false;
+    const pApprox = Math.min(0.05, 0.06*Math.exp(-(cl.t-1.8)/1.2));
+    if(pApprox > pCut()+0.004) return false;
+    if(corrected && !cl.strong) return false;
+    return true; }
+  function drawSlice(svg, sl){
+    let clHTML='';
+    sl.clusters.forEach((cl,i)=>{ if(!visible(cl)) return;
+      clHTML+='<g class="cluster" data-i="'+i+'" data-z="'+sl.z+'" style="cursor:pointer">'
+        +'<circle cx="'+cl.cx+'" cy="'+cl.cy+'" r="'+cl.rr+'" fill="'+tColor(cl.t)+'" opacity="0.88" stroke="#fff" stroke-width="1.5"/></g>'; });
+    svg.innerHTML =
+      '<ellipse cx="150" cy="130" rx="118" ry="105" fill="#f3e8e2" stroke="#c9b6ad" stroke-width="3"/>'
+      +'<ellipse cx="150" cy="132" rx="104" ry="92" fill="#ece0d8"/>'
+      +'<path d="M60,110 Q150,86 240,112" stroke="#d8c6bb" fill="none" stroke-width="2"/>'
+      +'<path d="M56,150 Q150,172 244,148" stroke="#d8c6bb" fill="none" stroke-width="2"/>'
+      +'<ellipse cx="138" cy="132" rx="13" ry="20" fill="#fbf2ef" stroke="#c9b6ad" stroke-width="2"/>'
+      +'<ellipse cx="163" cy="132" rx="13" ry="20" fill="#fbf2ef" stroke="#c9b6ad" stroke-width="2"/>'
+      +'<line x1="150" y1="42" x2="150" y2="230" stroke="#c9b6ad" stroke-width="1.5" stroke-dasharray="3,4"/>'
+      +clHTML;
+    svg.querySelectorAll('.cluster').forEach(g=>{
+      g.addEventListener('click',()=>{ const cl=sl.clusters[+g.dataset.i];
+        $('#infoTitle').textContent='🧠 '+cl.region;
+        $('#infoTable').innerHTML =
+          '<tr><td>指标方向</td><td>'+metricName[cl.cond]+'</td></tr>'
+          +'<tr><td>MNI 坐标</td><td style="font-family:var(--mono);">'+cl.mni+'</td></tr>'
+          +'<tr><td>体素数</td><td>'+cl.vox+(corrected?'（已通过校正）':'')+'</td></tr>'
+          +'<tr><td>峰值 t 值</td><td>'+cl.t.toFixed(1)+'（颜色越红 t 越大）</td></tr>'
+          +'<tr><td>解读</td><td>这一团 '+cl.vox+' 个体素整体表现出'+metricName[cl.cond].slice(3)+'，提示该区可能参与相关过程。</td></tr>'; }); });
+  }
+  function renderAll(){
+    $('#pthrRead').textContent='p < '+pCut().toFixed(3)+(corrected?'（GRF 校正，簇>21 体素）':'（未校正）');
+    $('#corrBtn').textContent='多重比较校正：'+(corrected?'开':'关');
+    $('#corrBtn').classList.toggle('on',corrected);
+    slices.forEach(sl=>{ const svg=document.getElementById('sl-'+sl.key);
+      if(svg) drawSlice(svg,sl); });
+  }
+  // 建 SVG
+  const holder=$('#slices');
+  slices.forEach(sl=>{ const fig=document.createElement('div'); fig.className='slicefig';
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('viewBox','0 0 300 260'); svg.id='sl-'+sl.key;
+    fig.appendChild(svg);
+    const lab=document.createElement('div'); lab.className='zlab'; lab.textContent='横断面 '+sl.z;
+    fig.appendChild(lab); holder.appendChild(fig); });
+  $('#pthr').oninput=e=>{ plev=+e.target.value; renderAll(); };
+  $('#corrBtn').onclick=()=>{ corrected=!corrected; renderAll(); };
+  window.__fmriViewer={renderAll};
+  renderAll();
+})();
+
+/* ============ 6 自测 ============ */
+(function(){
+  const qs=[
+    {q:'fMRI 的 BOLD 信号测量的是——', opts:['神经元的放电活动本身','血氧水平变化带来的磁共振信号改变','大脑的解剖结构','脑脊液的流动'], a:1,
+     exp:'BOLD 是间接信号：神经活动→氧耗→血流补偿→脱氧血红蛋白比例变化→T2* 信号改变。'},
+    {q:'静息态 fMRI 扫描时，被试需要——', opts:['完成记忆任务','看图片按键','闭眼放松、保持不动、不执行任务','睡觉'], a:2,
+     exp:'静息态只记录自发低频波动（0.01–0.1 Hz），6–10 分钟，头动是最大敌人。'},
+    {q:'ALFF 反映的是——', opts:['两个脑区曲线的相关性','单个体素低频波动的总幅度','脑区的解剖体积','相邻体素的同步性'], a:1,
+     exp:'ALFF=低频振幅（活跃度）；两区域相关是 FC；相邻同步是 ReHo。'},
+    {q:'ReHo 衡量的是——', opts:['一个体素与紧邻体素活动的时间同步性','全脑网络效率','血流速度','灰质厚度'], a:0,
+     exp:'ReHo（局部一致性）看的是"局部小团队"是否步调一致。'},
+    {q:'功能连接 FC 的基本统计量是——', opts:['两个区域时间序列的相关系数 r','体素数量','信号的信噪比','头动位移'], a:0,
+     exp:'r 从 −1 到 +1：正相关=同涨同落，负相关=此涨彼落。'},
+    {q:'fMRI 结果必须做多重比较校正（如 GRF/FWE），原因是——', opts:['让图更好看','全脑几万个体素同时检验，不校正会大量假阳性','减少扫描时间','增加体素数'], a:1,
+     exp:'检验次数越多，纯靠运气"显著"的体素越多——校正就是控制这种假阳性。'}
+  ];
+  const box=$('#quiz'); let score=0, done=0;
+  qs.forEach((item,qi)=>{
+    const d=document.createElement('div'); d.className='q';
+    d.innerHTML='<div class="qt">'+(qi+1)+'. '+item.q+'</div>';
+    item.opts.forEach((o,oi)=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=String.fromCharCode(65+oi)+'. '+o;
+      b.onclick=()=>{ if(d.dataset.done) return; d.dataset.done=1; done++;
+        if(oi===item.a){ b.classList.add('right'); score++; } else { b.classList.add('wrong');
+          d.querySelectorAll('.opt')[item.a].classList.add('right'); }
+        const e=d.querySelector('.exp'); e.style.display='block';
+        $('#score').textContent='得分：'+score+' / '+qs.length; };
+      d.appendChild(b); });
+    const e=document.createElement('div'); e.className='exp'; e.textContent='💡 '+item.exp; d.appendChild(e);
+    box.appendChild(d);
+  });
+  const sc=document.createElement('div'); sc.className='score'; sc.id='score'; sc.textContent='得分：0 / '+qs.length;
+  box.appendChild(sc);
+})();
+
+/* ============ 步骤导航高亮 ============ */
+(function(){
+  const secs=$$('.step'), links=$$('#rail a');
+  window.addEventListener('scroll',()=>{
+    let cur=0;
+    secs.forEach((s,i)=>{ if(s.getBoundingClientRect().top < 140) cur=i; });
+    links.forEach((l,i)=>l.classList.toggle('on', i===cur));
+  },{passive:true});
+})();
+</script>
+</body>
+</html>

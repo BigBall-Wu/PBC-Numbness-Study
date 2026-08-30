@@ -58,7 +58,7 @@
 | **`index.html`** | 公开网页 | 2026-06-25 | GitHub Pages 入口：首页导航 |
 | **`project.html`** | 公开网页 | 2026-06-25 | 项目简介、三部分研究结构、文档入口说明 |
 | **`handbook.html`** | 公开网页 | 2026-07-01 | 交互式学习手册（teaching/Lesson Lab 风格），已同步 V1.1 主线 |
-| **`fMRI互动课堂.html`** | 学习材料 | 2026-08-30 | 静息态 fMRI 互动教学页：BOLD 原理/预处理流水线/ALFF·ReHo·FC 可拖滑块演示/模拟脑图查看器（阈值+校正）/6 题自测（Lesson Lab 风格，示意图数据）；**本地版，未提交网页仓库** |
+| **`fmri-class.html`** | 公开网页 | 2026-08-30 | fMRI 互动课堂：静息态 fMRI 教学页（BOLD 原理/预处理流水线/ALFF·ReHo·FC 可拖滑块演示/模拟脑图查看器+统计校正/6 题自测，Lesson Lab 风格，示意图数据），已上线并加入首页导航 |
 | **`library.html`** | 公开网页 | 2026-07-01 | 50 篇文献库与主题筛选，已核对重复链接 |
 | **`references.html`** | 公开网页 | 2026-07-05 | 核心文献速查表网页版（16 篇按方案三部分定位） |
 | **`README.md`** | 索引 | 2026-08-29 | ← 本文件，项目导航 |
@@ -85,7 +85,7 @@
 ### 🔒 git 仓库说明（重要：合并结构）
 
 本目录**既是项目主目录，也是 git 仓库**（已合并，不再有独立的部署目录）。通过 `.gitignore` 保护私密文档：
-- ✅ **公开推送**：`index.html`、`project.html`、`handbook.html`、`library.html`、`references.html`、`README.md`、`.gitignore`
+- ✅ **公开推送**：`index.html`、`project.html`、`handbook.html`、`library.html`、`references.html`、`fmri-class.html`、`README.md`、`.gitignore`
 - ❌ **被排除（仅本地）**：所有 `*.docx`（方案/CRF/SAP/开题报告）、`*.md`（学习手册/笔记/速查表/开题稿等源文件）、`参考文献/`（50 篇 PDF，受版权保护）、`文献清洗备份/`、`.review_tmp/`（评审临时文件）、`sessions/`（会话记录）
 - ⚠️ **安全提示**：在本目录 `git add .` 是安全的（.gitignore 已设好），但**不要手动 `git add -f` 具体 docx / md / sessions 文件**，否则会绕过保护传到公开仓库。
 - ⚠️ **网页提示**：`project.html` 中的 Word 文档入口只适合本地/内部使用；公开 GitHub Pages 上不会提供这些 `.docx` 文件。
