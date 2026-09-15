@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PBC 术后麻木机制研究 · 项目导航</title>
+  <title>PBC 镇痛相关中枢功能变化研究 · 项目导航</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -44,6 +44,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg-1);line-he
   .nav-card{padding:32px 30px}
   .nav-card h2{font-size:22px}
   .mainline-strip{padding:32px}
+  .overview{padding:36px}
 }
 
 /* ===== Hero ===== */
@@ -104,10 +105,6 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg-1);line-he
 .nav-stat b{color:var(--card-color,var(--teaching-accent-deep));font-weight:600;font-size:14px}
 
 /* 卡片配色 */
-.nav-card.card-project{--card-color:#0f766e;--card-bg:#ccfbf1}
-.nav-card.card-handbook{--card-color:#7c3aed;--card-bg:#ede9fe}
-.nav-card.card-library{--card-color:#c2410c;--card-bg:#ffedd5}
-.nav-card.card-references{--card-color:#b45309;--card-bg:#fef3c7}
 .nav-card.card-fmri{--card-color:#be185d;--card-bg:#fce7f3}
 .nav-card.card-github{--card-color:#0369a1;--card-bg:#dbeafe}
 
@@ -122,7 +119,20 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg-1);line-he
 .mainline-node.c1{background:#fef3c7;color:#92400e}
 .mainline-node.c2{background:var(--teaching-accent-soft);color:var(--teaching-accent-deep)}
 .mainline-node.c3{background:#dbeafe;color:#1e40af}
+.mainline-node.c4{background:#fce7f3;color:#9d174d}
 .mainline-arrow{color:var(--fg-muted);font-size:20px}
+
+/* ===== 研究速览 ===== */
+.overview{
+  margin:0 0 40px;padding:28px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-xl);
+}
+.overview h2{font-family:var(--font-headline);font-weight:600;font-size:20px;margin-bottom:16px;color:var(--fg-1)}
+.ov-table{width:100%;border-collapse:collapse;font-size:14px}
+.ov-table th,.ov-table td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+.ov-table th{width:150px;color:var(--fg-muted);font-weight:600;white-space:nowrap}
+.ov-table tr:last-child th,.ov-table tr:last-child td{border-bottom:none}
+.ov-table b{color:var(--teaching-accent-deep)}
 
 /* ===== 底部 ===== */
 footer{padding:32px 0 56px;text-align:center;border-top:1px solid var(--border);margin-top:20px}
@@ -139,6 +149,12 @@ footer a{color:var(--teaching-accent-deep);text-decoration:none;font-weight:500}
   .nav-grid{grid-template-columns:1fr;gap:12px}
   .nav-card{padding:22px 20px}
   .mainline-node{padding:9px 13px;font-size:12px}
+  .overview{padding:22px}
+  .ov-table{font-size:13px}
+  .ov-table th{display:block;width:100%;padding-bottom:2px}
+  .ov-table td{display:block;padding-top:2px}
+  .ov-table th,.ov-table td{border-bottom:none}
+  .ov-table tr{display:block;border-bottom:1px solid var(--border);padding:8px 0}
 }
 </style>
 </head>
@@ -150,67 +166,42 @@ footer a{color:var(--teaching-accent-deep);text-decoration:none;font-weight:500}
   <!-- ===== HERO ===== -->
   <header class="hero">
     <div class="hero-logo">PBC</div>
-    <span class="hero-badge">临床-影像-fMRI 研究 · V1.1</span>
-    <h1>PBC 术后麻木机制研究</h1>
-    <p class="hero-tag">经皮球囊压迫术治疗三叉神经痛术后面部麻木的<b>危险因素</b>、<b>动态恢复轨迹</b>、<b>预测模型</b>与<b>中枢机制</b></p>
-    <p class="hero-meta">广西医科大学第二附属医院 · 主要研究者：和滢 · 200 例 + 30 例 fMRI</p>
+    <span class="hero-badge">纵向多模态 MRI 研究 · rs-fMRI + DTI</span>
+    <h1>PBC 镇痛相关中枢功能变化研究</h1>
+    <p class="hero-tag">经皮球囊压迫术治疗三叉神经痛后，脑功能改变与<b>镇痛幅度</b>的关联在控制<b>面部麻木</b>后是否依然成立？——把"镇痛相关"与"去传入相关"的中枢改变分离出来</p>
+    <p class="hero-meta">广西医科大学第二附属医院疼痛科 · 30 例前瞻性自身前后对照 · rs-fMRI + DTI</p>
   </header>
 
   <!-- ===== 主线 ===== -->
   <div class="mainline-strip">
     <div class="mainline-label">研究主线</div>
     <div class="mainline-flow">
-      <span class="mainline-node c1">临床现象·麻木</span>
+      <span class="mainline-node c1">PBC：镇痛 + 麻木并存</span>
       <span class="mainline-arrow">→</span>
-      <span class="mainline-node c2">数学预测·列线图</span>
+      <span class="mainline-node c2">ΔmOFC ↔ ΔNRS</span>
       <span class="mainline-arrow">→</span>
-      <span class="mainline-node c3">神经机制·fMRI</span>
+      <span class="mainline-node c4">调整麻木</span>
+      <span class="mainline-arrow">→</span>
+      <span class="mainline-node c3">镇痛相关功能变化</span>
     </div>
   </div>
   </div>
 
+  <!-- ===== 研究速览 ===== -->
+  <section class="overview" id="overview">
+    <h2>研究速览</h2>
+    <table class="ov-table">
+      <tr><th>设计</th><td>前瞻性、单中心、观察性、单臂、自身前后对照</td></tr>
+      <tr><th>样本</th><td>最低招募 30 例，滚动上限 34–36 例，<b>≥24 个影像质控合格配对即停</b></td></tr>
+      <tr><th>扫描</th><td>术前 1–7 天 与 术后 30±7 天：3D-T1 + rs-fMRI（240 volumes / 8 min）+ DTI（≥30 方向 b1000）；三叉神经专用 FLAIR-DTI 为预试验后探索项</td></tr>
+      <tr><th>主要终点</th><td><b>右 mOFC（MNI 6, 57, −9）Δz-fALFF</b>——独立先验 ROI，取自本院已发表纵向研究的显著簇</td></tr>
+      <tr><th>关键机制验证</th><td>ΔmOFC ↔ ΔNRS 关联，<b>调整术后面部麻木（BNI 分级）</b>、年龄、病程与头动后是否稳健</td></tr>
+      <tr><th>次要 / 探索</th><td>全脑 ΔfALFF（TFCE + 5000 次置换）、5 条预设边缘网络 FC、全脑 TBSS；受治神经 DTI 与 6/12 月远期结局（探索）</td></tr>
+    </table>
+  </section>
+
   <!-- ===== 导航卡片 ===== -->
   <nav class="nav-grid">
-    <a class="nav-card card-project" href="project.html">
-      <div class="nav-icon">📋</div>
-      <h2>项目简介</h2>
-      <p>研究背景、三部分结构、关键阈值、文档下载、研究团队——正式的项目展示页。</p>
-      <div class="nav-stats">
-        <span class="nav-stat"><b>3</b> 部分</span>
-        <span class="nav-stat"><b>4</b> 文档</span>
-      </div>
-    </a>
-
-    <a class="nav-card card-handbook" href="handbook.html">
-      <div class="nav-icon">🎓</div>
-      <h2>学习手册</h2>
-      <p>一天读懂方案：术语卡片、BNI 演示、逐节导读、12 道自测题判分——移动端碎片学习首选。</p>
-      <div class="nav-stats">
-        <span class="nav-stat"><b>54</b> 术语</span>
-        <span class="nav-stat"><b>12</b> 自测题</span>
-      </div>
-    </a>
-
-    <a class="nav-card card-library" href="library.html">
-      <div class="nav-icon">📚</div>
-      <h2>文献库</h2>
-      <p>50 篇最相关文献，可搜索、可按类别筛选，覆盖 PBC 麻木、复发、fMRI、GBTM 等主题。</p>
-      <div class="nav-stats">
-        <span class="nav-stat"><b>50</b> 篇</span>
-        <span class="nav-stat"><b>8</b> 类</span>
-      </div>
-    </a>
-
-    <a class="nav-card card-references" href="references.html">
-      <div class="nav-icon">⭐</div>
-      <h2>核心文献速查表</h2>
-      <p>16 篇 ⭐ 核心文献速查：按方案章节定位"这篇能用在哪里"，含关键数据与借鉴要点，写方案/答辩必备。</p>
-      <div class="nav-stats">
-        <span class="nav-stat"><b>16</b> 篇核心</span>
-        <span class="nav-stat"><b>5</b> 主题</span>
-      </div>
-    </a>
-
     <a class="nav-card card-fmri" href="fmri-class.html">
       <div class="nav-icon">🧠</div>
       <h2>fMRI 互动课堂</h2>
@@ -233,7 +224,7 @@ footer a{color:var(--teaching-accent-deep);text-decoration:none;font-weight:500}
   </nav>
 
   <footer>
-    <p>研究方案 V1.1 · 2026-06-24 · 单页网站，手机友好<br>
+    <p>研究计划 v2.0 · 镇痛相关中枢功能变化 · 2026-09-13 · 单页网站，手机友好<br>
     手机随时打开 <a href="https://bigball-wu.github.io/PBC-Numbness-Study/">bigball-wu.github.io/PBC-Numbness-Study</a> 学习</p>
   </footer>
 
